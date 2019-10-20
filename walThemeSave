@@ -1,0 +1,30 @@
+#! /bin/bash
+
+#This script saves pywal themes I like and might want to use again.
+#See polybar config for polybar-menu implementation
+
+outputDirectory=$HOME/.config/wal/colorschemes/likedSchemes
+
+function newBackground {
+	wall=$( cat $HOME/.cache/wal/wal )
+	cp $wall $HOME/pictures/.fehbg.png
+}
+
+if [ $1 == "save" ]; then
+	colorschemeName=$( $1 | dmenu -p "What should this colorscheme be called?" ) 
+	cat $HOME/.cache/wal/wal > $outputDirectory/$colorschemeName
+elif [ $1 == "load" ]; then
+	getScheme=$( $1 | ls $HOME/.config/wal/colorschemes/likedSchemes | dmenu -l 10 )
+	wal -i $( cat $outputDirectory/$getScheme )
+	newBackground
+elif [ $1 == "new" ]; then
+	wal -i $HOME/pictures/miscWG
+	newBackground
+elif [ $1 == "default" ]; then
+	xrdb merge $HOME/.Xresources
+	kill -1 $( pidof urxvtd )
+	i3-msg restart
+elif [ $1 == "inplace" ]; then
+	current=$( cat $HOME/.fehbg | tail -n 1 | awk '{print $3}' | sed 's/.//;s/.$//' )
+	wal -i $current
+fi

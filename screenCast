@@ -1,0 +1,22 @@
+#! /bin/bash
+
+
+# ffmpeg screen recorder
+
+res=$( xrandr -q --current | grep '*' | awk '{print $1}' )
+date=$( date +%Y-%m-%e-%I-%M )
+outputDir="$HOME/videos/screenCasts"
+
+# Video Only - No cutoff of video
+if [ $1 == "video" ]; then
+	ffmpeg -f x11grab -draw_mouse 1-s $res -i :0.0 -r 60 -vcodec libx264 $HOME/videos/screenCasts/video/$date.mkv 
+# This is only audio, and there is no cutoff of the audio and/or video when recording this way
+elif [ $1 == "audio" ]; then
+	ffmpeg -f pulse -ac 2 -i default -filter:a "volume=15.5" $HOME/Videos/Screen\ Casts/Audio/$date.mkv
+# Video+Audio - Has Cutoff of both near the last five seconds 
+elif [ $1 == "both" ]; then
+	ffmpeg -video_size $res -framerate 20 -f x11grab -draw_mouse 1 -i :0.0 -f pulse -ac 2 -i default -filter:a "volume=15.5" $HOME/Videos/screenCasts/both/$date.mkv
+else 
+	notify-send -t 3000 "Incorrect Choice - Try again"
+fi
+

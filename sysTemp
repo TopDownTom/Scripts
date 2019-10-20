@@ -1,0 +1,19 @@
+#! /bin/bash
+
+# A simple system temperature module for polybar
+
+#temp=$(cat /sys/class/thermal/thermal_zone0/temp)
+temp=$( sensors | grep Tdie | awk '{print $2}' )
+tempHigh=${temp##*+}
+red="%{F#b6465f}"
+gold="%{F#e89709}"
+
+#echo $tempHigh
+echo -e "${gold}${tempHigh}${F-}"
+
+#if [ $temp -ge 80000 ]; then
+#	echo -e "${red}${temp%???}\xE2\x84\x83${F-}" # reg-ex formatting for 2 numbers of $temp & polybar colors
+#else
+##	echo -e "${gold}${temp%???}\xE2\x84\x83${F-}"
+#	echo -e $tempHigh
+#fi

@@ -1,0 +1,15 @@
+#! /bin/bash
+
+# This will sort a list of episodes by prepending the episode number to the line.
+# Check the filenames to change to whatever pattern is pertinent
+
+counter=1
+numFiles=$(ls | wc -l)
+
+while [ $counter -le $numFiles ]
+do
+line=$(ls | grep "Episode $counter.mp4") # Change this grep to match the relevant filename pattern
+echo $line
+newline=$(mv "$line" "Ep. $counter: $line") # Also change this to relevant filename pattern
+(( counter++ ))
+done

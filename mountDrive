@@ -1,0 +1,14 @@
+#! /bin/bash
+# Mounts drives, ignoring anything nvme so I don't accidentally unmount root...
+
+mountables=$( $1 | lsblk -o NAME,SIZE,TYPE,MOUNTPOINT -l | grep part | grep -v 'nvme' | dmenu -l 9 | awk '{print $1}' )
+mountPoint=$( udisksctl info -b /dev/$mountables | grep "MountPoints:" | awk '{print $2}' )
+
+
+if [ -z $mountPoint ]; then
+	udisksctl mount -b /dev/$mountables
+	notify-send -t 2500 "Mounting: $mountables"
+else
+	udisksctl unmount -b /dev/$mountables
+	notify-send -t 2500 "Unmounting: $mountables"
+fi

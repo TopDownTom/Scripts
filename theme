@@ -1,0 +1,15 @@
+#! /bin/bash
+# Restarts the urxvt daemon to apply the new color changes. Must have the config-reload perl extension enabled.
+# See https://github.com/regnarg/urxvt-config-reload for details.
+
+themeChoice=$( $1 | ls ~/.colors | dmenu -p "Which Theme Would you Like?:" )
+firefoxColors=$( cat $HOME/.Xresources | grep colorBorder | awk '{print $2}' )
+daemonPID=$( pidof urxvtd | awk '{print $2}' ) # Unsure why my urxvtd spawns two instances...but I always need the 2nd one.
+
+notify-send -t 3500 "Switching To Theme: $themeChoice"
+
+cat ~/.colors/$themeChoice > ~/.Xresources && xrdb load ~/.Xresources && kill -1 $daemonPID && i3-msg reload
+
+firefoxNewColors=$( cat $HOME/.Xresources | grep colorBorder | awk '{print $2}' )
+
+sed -i "s/$firefoxColors/$firefoxNewColors/g" "$HOME/.mozilla/firefox/1xs6bp24.default/chrome/colors.css"

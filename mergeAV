@@ -1,0 +1,41 @@
+#! /bin/bash
+
+# This script searches the $PWD and merges user-input audio and video files using ffmpeg.
+# Upon completing the conversion the user is asked whether to keep or delete the original separate files.
+
+cd $PWD
+
+audio=$( $1 | ls | grep -i audio | dmenu -l 5 -p "Please Select Audio File:" )
+video="$( $1 | ls | grep -i video | dmenu -l 5 -p "Please Select Video File:" )"
+videoFormat=${video##*.}
+outputFile="$( $1 | dmenu -p "Enter Output Filename:" )"
+
+printf "You have selected:\n $audio \n $video\n"
+printf "Video format is:\n $videoFormat\n"
+printf "Output File:\n $outputFile.$videoFormat\n"
+
+ffmpeg -i "$video" -i "$audio" -map 0:0 -map 1:0 -shortest "$outputFile".$videoFormat
+
+function removeFiles {
+	remove=$( $1 | dmenu -p "Remove Individual Files?" )
+
+	if [ $remove == "yes" ];
+	then
+		echo "Removing Files.."
+		rm "$video"
+		rm "$audio"
+		ans="right"
+	elif [ $remove == "no" ];
+	then
+		echo "Keeping Files.."
+		ans="right"
+	else
+		echo "Incorrect Choice, please type 'yes' or 'no'."
+	fi
+}
+
+ans="wrong"
+while [ "$ans" == "wrong" ]
+do
+	removeFiles
+done

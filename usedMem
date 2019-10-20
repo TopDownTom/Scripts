@@ -1,0 +1,13 @@
+#! /bin/bash
+
+# A more accurate memory module for polybar
+blue="%{F#6992c5}"
+
+# Get the memory
+mem=$(free -m | grep Mem: | awk '{print $3}')
+
+if [ "${#mem}" -gt 3 ]; then
+	echo "${blue}${mem%???}.${mem:1:2}${F-} GB" # regex and color formatting
+else
+	echo "${blue}$mem${F-} MB"
+fi

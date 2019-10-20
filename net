@@ -1,0 +1,71 @@
+#! /bin/bash
+# This program connects to the internet via nmcli using dmenu for prompts and input.
+# Set up new connection points:
+# vpn:    nmcli con import type openvpn file /path/to/file
+# 	  nmcli con modify <file> +vpn.data username=username
+#
+# ethernet: nmcli con add type ethernet con-name "Wired" ifname eno1 --ask
+# wifi: nmcli device wifi connect <access point> --ask
+
+nmcli radio wifi on
+
+function vpnConnect {
+	nordvpn connect $country $city
+}
+
+# Select Wired or Wifi
+type=$(nmcli device | awk '{print $2}' | grep "[ethernet wifi]" | dmenu -p "Type of connection:")
+
+# If ethernet, will connect to whichever ethernet cable is plugged in
+if [ $type == "ethernet" ]; then
+	access="Wired"
+	typeCon="eno1"
+	nmcli con up $access 
+	nmcli radio wifi off
+
+# Else, connect to a wifi hotspot
+elif [ $type == "wifi" ]; then 
+	nmcli networking off
+	nmcli networking on
+	known="$($1 | dmenu -p "Reconnect to known access point? (y/n):")" # Known wifi?
+	typeCon="wlo1"
+	
+	if [ $known == "y" ]; then 
+		access=$(nmcli con | awk '{print $1}' | dmenu -l 20) #Display then connect to selection
+		nmcli con up "$access"
+	else
+		nmcli dev wifi rescan
+		accessChoice=$( $1 | nmcli device wifi list | dmenu -l 20 ) # Select available points
+		accessChoice="${accessChoice%Infra*}" # Cleans around the access point
+		accessChoice=`echo $accessChoice` # Removes exterior spaces
+		nmcli dev wifi connect "$accessChoice" --ask
+	fi
+fi
+
+# Connect to a pre-loaded VPN file?
+vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
+
+if [ $vpn == "y" ]; then
+#	vpnChoice=$(nmcli con | grep nord* | awk '{print $1}' |  dmenu -l 20 -p "Which one?:") # The grep will be different
+## for whoever your VPN service is
+#	nmcli con up $vpnChoice --ask
+
+	vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us):" )
+
+	nordvpn disconnect > /dev/null
+	city=$( shuf $HOME/Network/${vpnCountry}Cities | head -n 1 ) > /dev/null
+	if [ "$vpnCountry" == "sw" ];
+	then
+		country="Switzerland"
+		city="Zurich"
+	elif [ "$vpnCountry" == "ca" ];
+	then
+		country="Canada"
+	elif [ "$vpnCountry" == "us" ];
+	then
+		country="United_States"
+	else
+		notify-send -u low -t 2500 "Choosing random server.."
+	fi
+	vpnConnect
+fi

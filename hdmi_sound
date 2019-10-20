@@ -1,0 +1,27 @@
+#!/bin/bash
+totalsc=$(pacmd "list-sinks" | grep card: | wc -l)
+if [ $totalsc -le 1 ]; then
+	exit
+fi
+scindex=$(pacmd list-sinks | awk '$1 == "*" && $2 == "index:" {print $3}')
+cards=$(pacmd list-sinks | sed 's|*||' | awk '$1 == "index:" {print $2}')
+PICKNEXTCARD=1
+count=0
+for CARD in $cards; do
+	if [ $PICKNEXTCARD == 1 ]; then
+		nextsc=$CARD
+		PICKNEXTCARD=0
+		nextind=$count
+	fi
+	if [ $CARD == $scindex ]; then
+		PICKNEXTCARD=1
+	fi
+	count=$((count+1))
+done
+pacmd "set-default-sink $nextsc"
+inputs=$(pacmd list-sink-inputs | awk '$1 == "index:" {print $2}')
+for INPUT in $inputs; do
+	pacmd move-sink-input $INPUT $nextsc
+done
+exit
+
