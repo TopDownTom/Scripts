@@ -25,6 +25,6 @@ elif [ $1 == "default" ]; then
 	kill -1 $( pidof urxvtd )
 	i3-msg restart
 elif [ $1 == "inplace" ]; then
-	current=$( cat $HOME/.fehbg | tail -n 1 | awk '{print $3}' | sed 's/.//;s/.$//' )
+	current=$( cat $HOME/.fehbg | tail -n 1 | awk '{print $4}' | sed 's/.//;s/.$//' )
 	wal -i $current
 fi

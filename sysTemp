@@ -10,10 +10,3 @@ gold="%{F#e89709}"
 
 #echo $tempHigh
 echo -e "${gold}${tempHigh}${F-}"
-
-#if [ $temp -ge 80000 ]; then
-#	echo -e "${red}${temp%???}\xE2\x84\x83${F-}" # reg-ex formatting for 2 numbers of $temp & polybar colors
-#else
-##	echo -e "${gold}${temp%???}\xE2\x84\x83${F-}"
-#	echo -e $tempHigh
-#fi

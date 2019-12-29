@@ -4,7 +4,7 @@
 # directory to the corresponding github repository.
 
 # Change to appropriate directory
-cd $HOME/.files 
+cd $HOME/.config/.files 
 
 # Perform the pull
 git pull origin master

@@ -12,7 +12,7 @@ num='^[0-9]+$'
 if [[ $1 =~ $num ]]; then
 	lvl=$( echo "$1*255/100" | bc ) 
 	echo "$lvl" > $outFile
-else # increment
+else
 	if [ $1 == "up" ]; then
 		lvl=$(( $lvl + 25 ))
 		if [ $lvl -le 255 ]; then

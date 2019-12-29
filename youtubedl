@@ -30,9 +30,3 @@ else
 		name="%(title)s"
 	fi
 fi
-
-convert=$( $1 | dmenu -p "Do you want to convert to an mp3? (y/n):" )
-
-if [ $convert == "y" ]; then
-	dirParse
-fi

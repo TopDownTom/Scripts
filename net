@@ -4,7 +4,7 @@
 # vpn:    nmcli con import type openvpn file /path/to/file
 # 	  nmcli con modify <file> +vpn.data username=username
 #
-# ethernet: nmcli con add type ethernet con-name "Wired" ifname eno1 --ask
+# ethernet: nmcli con add type ethernet con-name "wired" ifname eno1 --ask
 # wifi: nmcli device wifi connect <access point> --ask
 
 nmcli radio wifi on
@@ -13,12 +13,12 @@ function vpnConnect {
 	nordvpn connect $country $city
 }
 
-# Select Wired or Wifi
-type=$(nmcli device | awk '{print $2}' | grep "[ethernet wifi]" | dmenu -p "Type of connection:")
+# Select wired or wifi
+type=$(nmcli device | awk '{print $2}' | grep "[ethernet wifi]" | dmenu -p "Type of connection: ")
 
 # If ethernet, will connect to whichever ethernet cable is plugged in
 if [ $type == "ethernet" ]; then
-	access="Wired"
+	access="wired"
 	typeCon="eno1"
 	nmcli con up $access 
 	nmcli radio wifi off
@@ -42,30 +42,31 @@ elif [ $type == "wifi" ]; then
 	fi
 fi
 
+# Currently commented out because I have switched VPN providers.
 # Connect to a pre-loaded VPN file?
-vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
-
-if [ $vpn == "y" ]; then
-#	vpnChoice=$(nmcli con | grep nord* | awk '{print $1}' |  dmenu -l 20 -p "Which one?:") # The grep will be different
-## for whoever your VPN service is
-#	nmcli con up $vpnChoice --ask
-
-	vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us):" )
-
-	nordvpn disconnect > /dev/null
-	city=$( shuf $HOME/Network/${vpnCountry}Cities | head -n 1 ) > /dev/null
-	if [ "$vpnCountry" == "sw" ];
-	then
-		country="Switzerland"
-		city="Zurich"
-	elif [ "$vpnCountry" == "ca" ];
-	then
-		country="Canada"
-	elif [ "$vpnCountry" == "us" ];
-	then
-		country="United_States"
-	else
-		notify-send -u low -t 2500 "Choosing random server.."
-	fi
-	vpnConnect
-fi
+#vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
+#
+#if [ $vpn == "y" ]; then
+##	vpnChoice=$(nmcli con | grep nord* | awk '{print $1}' |  dmenu -l 20 -p "Which one?:") # The grep will be different
+### for whoever your VPN service is
+##	nmcli con up $vpnChoice --ask
+#
+#	vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us):" )
+#
+#	nordvpn disconnect > /dev/null
+#	city=$( shuf $HOME/network/${vpnCountry}Cities | head -n 1 ) > /dev/null
+#	if [ "$vpnCountry" == "sw" ];
+#	then
+#		country="Switzerland"
+#		city="Zurich"
+#	elif [ "$vpnCountry" == "ca" ];
+#	then
+#		country="Canada"
+#	elif [ "$vpnCountry" == "us" ];
+#	then
+#		country="United_States"
+#	else
+#		notify-send -u low -t 2500 "Choosing random server.."
+#	fi
+#	vpnConnect
+#fi

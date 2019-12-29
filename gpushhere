@@ -15,7 +15,7 @@ do
 done
 
 # Generate the commit message using dmenu as the interface
-commitMessage="$($1 | dmenu -i -p  "Dotfiles commit message?")"
+commitMessage="$($1 | dmenu -i -p  "Commit message?")"
 
 # Perform the push
 git add .
@@ -23,5 +23,5 @@ git commit -m "$commitMessage"
 git push origin master
 
 # Show the commit message, signaling a completed push
-notify-send --expire-time=3000  "Dotfiles Commit Message: $commitMessage"
+notify-send --expire-time=3000  "Commit Message: $commitMessage"
 
