@@ -1,0 +1,5 @@
+#! /bin/bash
+
+videoUrl="$( $1 | dmenu -p "Paste Video URL: ")"
+
+mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" $videoUrl
