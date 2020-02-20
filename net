@@ -44,9 +44,10 @@ fi
 
 # Currently commented out because I have switched VPN providers.
 # Connect to a pre-loaded VPN file?
-#vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
+vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
 #
-#if [ $vpn == "y" ]; then
+if [ $vpn == "y" ]; then
+	st -e sudo protonvpn c
 ##	vpnChoice=$(nmcli con | grep nord* | awk '{print $1}' |  dmenu -l 20 -p "Which one?:") # The grep will be different
 ### for whoever your VPN service is
 ##	nmcli con up $vpnChoice --ask

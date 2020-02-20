@@ -1,0 +1,25 @@
+#! /bin/bash
+
+# This script will utilize dmenu and xrandr to select the desired video output configuration
+
+connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
+echo -e "Your connected devices are:\n$connectedDevices"
+
+singleOrMultiMonitor=$( $1 | dmenu -p "Do you want a (s)ingle or (m)ulti-display configuration? " )
+
+if [ $singleOrMultiMonitor == "s" ]
+then
+	connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
+#	screenOutputOrientation=$( xrandr --output $screenOutputOrientation --auto )
+
+elif [ $singleOrMultiMonitor == "m" ]
+then
+	connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
+	laptopScreenPosition=$( $1 | xrandr --output eDP1 --help | dmenu -l 20 -p "Please choose from the output: " | sed 's/ //g' )
+	screenOutputOrientation=$( xrandr --output eDP1 $position --output HDMI2 )
+
+
+#screenOutputOrientation=$( $1 | xrandr --output eDP1 --help | dmenu -l 20 -p "Please choose from the output: " | sed 's/ //g' )
+
+
+
