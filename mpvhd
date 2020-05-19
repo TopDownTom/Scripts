@@ -1,5 +1,6 @@
 #! /bin/bash
 
-videoUrl="$( $1 | dmenu -p "Paste Video URL: ")"
+videoName=$(youtube-dl -e `xclip -o`)
 
-mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" $videoUrl
+notify-send -u low -t 2000 "Fetching video: $videoName"
+mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" `xclip -o`

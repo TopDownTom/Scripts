@@ -1,0 +1,23 @@
+#! /bin/bash
+
+tempFilePrefix=$(mktemp)
+
+
+
+echo uname && uname -a -m -p &> $tempFile && \
+echo lspci && lspci -vvv -nn | awk 'BEGIN {RS="\n\n"} /Ethernet controller|Network controller/ {print $0}' &> $tempFile && \
+echo lsusb && lsusb &> $tempFile && \
+echo lsmod && lsmod &> $tempFile && \
+echo ifconfig && ifconfig &> $tempFile && \
+echo ifconfig -a && ifconfig -a &> $tempFile && \
+echo iwconfig && iwconfig &> $tempFile && \
+echo rfkill && rfkill list &> $tempFile && \
+echo iwlist && sudo iwlist `awk '/IEEE/ {print $1}' /tmp/06-iwconfig.topdowntom` scan &> /tmp/08-iwlist.topdowntom && \
+echo resolv.conf && cat /etc/resolv.conf &> 09-resolv.conf.topdowntom && \
+echo route && route -n &> /tmp/10-route.topdowntom && \
+echo ping router && ping -c 1 `route | awk '/default/ {print $2}'` &> /tmp/11-ping-router.topdowntom && \
+echo ping dns server && ping -c 1 `awk '/nameserver/ {print $2}' /etc/resolv.conf | head -n 1` &> /tmp/12-ping-dns-server.topdowntom && \
+echo ping using ip && ping -c 1 138.201.81.199 &> /tmp/13-ping-using-ip.topdowntom && \
+echo ping using dns && ping -c 1 archlinux.org &> /tmp/14-ping-using-dns.topdowntom
+
+head -n 99999 /tmp/*.topdowntom

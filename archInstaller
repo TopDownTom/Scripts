@@ -1,0 +1,6 @@
+#! /bin/bash
+
+# Verify the you can connect to the internet
+
+# Set the system clock to use NTP 
+#timedatectl set-ntp true

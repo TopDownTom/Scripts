@@ -2,9 +2,10 @@
 
 # Gets the volume percentage
 vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | head -n 1 )
+muted=$( pacmd list-sinks | grep muted: | awk '{print $2}' )
 
 # Echo the volume to the path the polybar module volLevel looks to cat. 
-if [ $vol == "0%" ]; then
+if [ $muted == "yes" ]; then
 	echo "Muted" > $HOME/.config/polybar/volLevel
 else
 	echo $vol > $HOME/.config/polybar/volLevel
