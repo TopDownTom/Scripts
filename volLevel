@@ -1,6 +1,14 @@
 #! /bin/bash
 
+# Find which card is active, HDMI or Laptop default
+if [ $(pacmd list-sinks | grep -e '*' | awk '{print $3}') = 0 ]; then
+	card=14 # HDMI
+else
+	card=4 # Laptop default
+fi
+
 # Gets the volume percentage
+#vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | sed -n "${card}p" )
 vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | head -n 1 )
 
 # Echo the volume to the path the polybar module volLevel looks to cat. 
@@ -12,4 +20,3 @@ fi
 
 # Trigger the polybar ipc module
 polybar-msg hook volLevel 1
-

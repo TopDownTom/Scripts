@@ -1,25 +1,16 @@
 #! /bin/bash
 
-function vpnConnected() {
-	nmcli c s | grep -w "tun" | awk '{print $3}'
-}
-
 # Check connections
-con="$(vpnConnected)"
-enoup="$(cat /sys/class/net/enp24s0/operstate)"
-[[ "$con" != "tun" ]] && disconnected="%{F#ff0000}" # if no vpn print IP in red
-#[[ "$con" != "Connected" ]] && disconnected="%{F#ff0000}" # if no vpn print IP in red
+wired="$(cat /sys/class/net/e*/operstate)"
+wireless="$(cat /sys/class/net/w*/operstate)"
+disconnected="%{F#ff0000}"
 
-if [ "$enoup" == "down" ]; then
-	echo "Internet Disconnected"
-fi
+[ "$wired" == "down" ] && [ "$wireless" == "down" ] && echo "Internet Disconnected"
 
-if [ "$con" == "Connected" ]; then
-	IP=$(protonvpn status | grep IP: | awk '{print $2}')
-	echo "$IP" 
+if [ "$(nmcli c s  | grep proton)" ]; then
+	server=$(protonvpn status | grep -E "IP:|Server:" | awk '{print $2}' | tr '\n' ' ' | awk '{print $2": "$1}')
+	echo "$server"
 else
-#	IP=$(wget -q -O- https://api.ipify.org)
-	IP=$(ip route | grep enp | tail -n 1 | awk '{print $1}')
+	IP=$(wget -q -O- https://api.ipify.org)
 	echo "${disconnected}$IP${F-}"
-#	echo $IP
 fi

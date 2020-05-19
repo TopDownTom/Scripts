@@ -1,0 +1,12 @@
+#! /bin/bash
+
+cd ~
+
+export fileid=13buh9OZu6E3J2CxvT6aRb9DvgNG7M-aT5pbxAB6-Lhg
+export filename=brewing1
+
+## WGET ##
+wget -O $filename 'https://docs.google.com/uc?export=download&id='$fileid
+
+## CURL ##
+curl -L -o $filename 'https://docs.google.com/uc?export=download&id='$fileid

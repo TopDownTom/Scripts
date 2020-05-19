@@ -23,10 +23,16 @@ else
 		if [ $convert == "y" ]; then
 			ffmpeg -y -i "$name.$fileType" "$name.mp3"
 		fi
-		rm $name.$fileType
+#		rm $name.$fileType
 
 	else
 		youtube-dl -f $formatType -o "%(title)s.$fileType" $url
 		name="%(title)s"
 	fi
 fi
+
+#convert=$( $1 | dmenu -p "Do you want to convert to an mp3? (y/n):" )
+#
+#if [ $convert == "y" ]; then
+#	dirParse
+#fi

@@ -9,27 +9,37 @@ function conUp {
 	 nmcli c s | grep nord | grep $typeCon > /dev/null
 }
 
-vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us):" )
-#file=$( shuf $HOME/Network/${vpnCountry}TcpFiles )
+vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us/dis):" )
+file=$( shuf $HOME/network/${vpnCountry}TcpFiles )
+
 #choice=$( echo ${file%%.ovpn*} | awk '{print $1}' )
-#nmcli c u $choice --ask
+#upordown=$( $1 | dmenu -p "Up or down? (u/d):" )
+#if [ "$upordown" == "u" ]; then
+#	choice=$( $1 | nmcli c s | grep nord | awk '{print $1}' | dmenu -l 5 -p "Select VPN:" )
+#	nmcli c u $choice --ask
+#else
+#	choice=$( $1 | nmcli c s | grep nord | awk '{print $1}' | dmenu -l 5 -p "Select VPN to deactivate:" )
+#	nmcli c d $choice
+#fi
 
 nordvpn disconnect
-city=$( shuf $HOME/Network/${vpnCountry}Cities | head -n 1 ) > /dev/null
+city=$( shuf $HOME/network/${vpnCountry}Cities | head -n 1 ) > /dev/null
 if [ "$vpnCountry" == "sw" ];
 then
 	country="Switzerland"
 	city="Zurich"
+	vpnConnect
 elif [ "$vpnCountry" == "ca" ];
 then
 	country="Canada"
+	vpnConnect
 elif [ "$vpnCountry" == "us" ];
 then
 	country="United_States"
+	vpnConnect
 elif [ "$vpnCountry" == "dis" ];
 then
 	nordvpn disconnect
 else
 	notify-send -u low -t 2500 "Choosing random server.."
 fi
-vpnConnect

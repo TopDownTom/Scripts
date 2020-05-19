@@ -2,8 +2,8 @@
 
 # This is a simple dmenu based timer.
 
-askTime=$( $1 | dmenu -p "Enter a time in minutes:")
-whatFor=$( $1 | dmenu -p "Why?: ")
+askTime=$(dmenu -p "Enter a time in minutes:")
+whatFor=$($1 | dmenu -p "Why?: ")
 convert=$( echo "$askTime*60" | bc )
 
 

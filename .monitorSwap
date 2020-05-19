@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# default monitor is LVDS
+MONITOR=eDP1
+
+# export the path to user PulseAudio daemon, for udev rule usage
+export PULSE_RUNTIME_PATH=/run/user/$(id -u $user)/pulse
+#echo plug >>  $HOME/testDir/test
+
+#Uses xrandr to turn on HDMI at auto resolution and turn off LVDS
+function ActivateHDMI {
+    xrandr --output HDMI2 --auto --output eDP1 --off
+    MONITOR=HDMI2
+    audioOutput="output:hdmi-stereo-extra1"
+}
+#Uses xrandr to turn off HDMI then turn on LVDS at automatic resolution
+function DeactivateHDMI {
+    xrandr --output HDMI2 --off --output eDP1 --auto
+    MONITOR=eDP1
+    audioOutput="output:analog-stereo"
+}
+# functions to check if HDMI is connected and in use
+function HDMIActive {
+    [ $MONITOR = "HDMI2" ]
+}
+function HDMIConnected {
+	! xrandr | grep "^HDMI2" | grep disconnected > /dev/null
+}
+
+# actual script
+while [ true ] 
+do
+
+#If monitor is not set to HDMI but cable is connected
+    if ! HDMIActive && HDMIConnected
+    then
+	ActivateHDMI
+	pacmd set-card-profile 0 $audioOutput
+	feh --bg-max $HOME/.pape.jpg
+    fi
+
+#If monitor set to HDMI but cable is not connected
+    if HDMIActive && ! HDMIConnected
+    then
+	DeactivateHDMI
+	pacmd set-card-profile 0 $audioOutput
+	feh --bg-max $HOME/.pape.jpg
+    fi
+
+#If monitor set to LVDS and HDMI is not connected
+    if ! HDMIActive && ! HDMIConnected
+    then
+	DeactivateHDMI
+	pacmd set-card-profile 0 $audioOutput
+	feh --bg-max $HOME/.pape.jpg
+    fi
+exit
+done

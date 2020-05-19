@@ -1,15 +1,11 @@
 #!/bin/bash
-# This is a script called in a Vim function to compile the current document. See vimrc.
+# This script is called in a Vim function to compile the current document. See vimrc.
 # It depends on a program called pydflatex which can be found at: https://github.com/olivierverdier/pydflatex
 
-file=$1
-file=${file%.*}
+file=${1%.*}
 
 #If a latex 'build' directory does not exist, create it. This helps keep the directory clean of all the compiled files.
-if ! (ls | grep build* >/dev/null)
-then
-	mkdir build 
-fi
+[[ -d build ]] || mkdir -p build
 
 #This helps keep the main directories clean of `unnecessary' files.
 function moveLogs { 

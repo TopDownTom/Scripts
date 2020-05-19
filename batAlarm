@@ -1,6 +1,5 @@
 #! /bin/bash
 
-#This is a test change
 # A battery alarm for polybar
 
 bat_capac=$(cat /sys/class/power_supply/BAT0/capacity)

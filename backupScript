@@ -1,9 +1,9 @@
-#! /bin/bash 
+#! /bin/bash
 
 cd $HOME
 #Check for mounted external drives
 #mounted=$( lsblk | dmenu -l 10 -p "Select:" | awk '{print $7}' )
-#
+
 #if [[ -n $mounted ]]; then
 #	echo External Drive Mounted, Continuing...
 #else
@@ -11,22 +11,26 @@ cd $HOME
 #	sudo mount -o umask=022,gid=1000,uid=1000 $mountables /run/mount/
 #fi
 
-#Delete unnecessary directories for backup
+##Delete unnecessary directories for backup
 rm -r $HOME/.thumbnails/
 rm -r $HOME/.cache/
 
-## Perform the sync
+##Perform the sync
 
-# Home directory of desktop
-rsync -av --exclude=music --exclude=pictures /home/tom /run/media/tom/easystore/backup/desktop/
-notify-send -u normal -t 6000 "Home Folder Backup Complete" 
+# Home directory of laptop
+rsync -av --exclude=music --exclude=pictures --exclude=documents /home/tom /run/media/tom/easystore/backup/laptop/
+notify-send -u normal -t 6000 "Home Folder Backup Complete"
 
-# Media from desktop to collective media directories on backup
-rsync -av $HOME/music /run/media/tom/easystore/backup/
-notify-send -u normal -t 6000 "Music Backup Complete"
+# Media from laptop to collective media directories on backup
+#This is deprecated, I only sync music from my main machine which is always the most up to date. 
+#rsync -av $HOME/music /run/media/tom/easystore/backup/
+#notify-send -u normal -t 6000 "Music Folder Backup Complete"
 rsync -av $HOME/pictures /run/media/tom/easystore/backup/
-notify-send -u normal -t 6000 "Pictures Backup Complete"
+#notify-send -u normal -t 6000 "Pictures Folder Backup Complete"
 
-# Documents from desktop to collective documents directory on backup
+# Documents from laptop to collective documents directory on backup
 rsync -av $HOME/documents /run/media/tom/easystore/backup/
-notify-send -u normal -t 6000 "Documents Backup Complete"
+#notify-send -u normal -t 6000 "Coffee Directory Backup Complete"
+
+
+

@@ -5,26 +5,15 @@
 
 outputDirectory=$HOME/.config/wal/colorschemes/likedSchemes
 
-function newBackground {
-	wall=$( cat $HOME/.cache/wal/wal )
-	cp $wall $HOME/pictures/.fehbg.png
-}
-
 if [ $1 == "save" ]; then
 	colorschemeName=$( $1 | dmenu -p "What should this colorscheme be called?" ) 
 	cat $HOME/.cache/wal/wal > $outputDirectory/$colorschemeName
 elif [ $1 == "load" ]; then
 	getScheme=$( $1 | ls $HOME/.config/wal/colorschemes/likedSchemes | dmenu -l 10 )
-	wal -i $( cat $outputDirectory/$getScheme )
-	newBackground
+	wal -a 95 -i $( cat $outputDirectory/$getScheme )
 elif [ $1 == "new" ]; then
-	wal -i $HOME/pictures/miscWG
-	newBackground
-elif [ $1 == "default" ]; then
-	xrdb merge $HOME/.Xresources
-	kill -1 $( pidof urxvtd )
-	i3-msg restart
+	wal -a 95 -i $HOME/pictures/miscWG
 elif [ $1 == "inplace" ]; then
-	current=$( cat $HOME/.fehbg | tail -n 1 | awk '{print $4}' | sed 's/.//;s/.$//' )
-	wal -i $current
+	current=$( cat .fehbg | awk '{print $3}' | tail -n 1 | sed 's/.//;s/.$//' )
+	wal -a 95 -i $current
 fi

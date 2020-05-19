@@ -1,0 +1,5 @@
+#! /bin/bash
+
+echo -e $(cat $HOME/.bash_history | head -n 0) 
+
+#sed 's/\&\&\ echo \&\(fc -l \| tail -n 1\)//g' /home/tom/commandOutput.txt >> commandOutput.txt^C

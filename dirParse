@@ -1,10 +1,9 @@
 #! /bin/bash
 
 # This script will process all files in some directory, including all subdirectories within. In this case I converted all
-# music within /home/user/music from one filetype to another.
-######################################################################################################
+# music within /home/user/Music from .m4a to .mp3. 
 # BE SURE TO COMMENT OUT THE rm *.$typeFrom LINES IF YOU DON'T WANT TO ERASE THE PREVIOUS INFORMATION. 
-######################################################################################################
+# 
 # This script can be used as a general purpose directory-tree processing script, modifying all the subdirectories within a
 # starting directory. 
 
@@ -31,6 +30,7 @@ do dirName="echo $a";
 		subDir=${subDir:5}
 		cd "$subDir"
 		echo "In $PWD"
+#		sleep .4s 
 
 		for d in *.$typeFrom; # This formats files within the subdirectories
 		do name2=`echo "${d%.*}"`;

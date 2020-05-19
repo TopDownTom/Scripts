@@ -5,18 +5,19 @@
 
 # function to check if HDMI is connected
 function HDMIConnected {
-	! xrandr | grep "^HDMI-0" | grep disconnected
+	! xrandr | grep "^HDMI2" | grep disconnected
 }
+
+#pacmd set-default-sink 0
 
 if HDMIConnected
 then
-  x=0
-else
   x=1
+else
+  x=0
 fi
 
 # Move the sink
-pacmd set-default-sink $x
 pacmd list-sink-inputs | grep index | while read line
 do
 pacmd move-sink-input `echo $line | cut -f2 -d' '` $x

@@ -2,14 +2,19 @@
 
 # A simple battery-level script for polybar
 
-bat_capac=$(cat /sys/class/power_supply/BAT0/capacity)
-discharging=$(cat /sys/class/power_supply/BAT0/status)
+bat_capac=$(cat /sys/class/power_supply/BAT1/capacity)
+discharging=$(cat /sys/class/power_supply/BAT1/status)
 green="%{F#00cc00}"
-red="%{F#b6465f}"
 yellow="%{F#ffff00}"
 
-if [ $discharging == "Discharging" ]; then
+if [ $discharging == "Discharging" ] && [ "$bat_capac" -le "20" ]; then
+	systemctl suspend
+
+elif [ $discharging == "Discharging" ]; then
 	echo "${yellow}$bat_capac${F-}%"
+
 else
 	echo "${green}$bat_capac${F-}%"
 fi
+
+	

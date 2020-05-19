@@ -1,7 +1,7 @@
 #! /bin/bash
-# Mounts drives, ignoring anything nvme so I don't accidentally unmount root...
+# Mounts drives, ignoring anything sda so I don't accidentally unmount root...
 
-mountables=$( $1 | lsblk -o NAME,SIZE,TYPE,MOUNTPOINT -l | grep part | grep -v 'nvme' | dmenu -l 9 | awk '{print $1}' )
+mountables=$( $1 | lsblk -o NAME,SIZE,TYPE,MOUNTPOINT -l | grep part | grep -v 'nvme' | dmenu -l 4 | awk '{print $1}' )
 mountPoint=$( udisksctl info -b /dev/$mountables | grep "MountPoints:" | awk '{print $2}' )
 
 

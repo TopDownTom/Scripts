@@ -4,7 +4,7 @@
 # directory to the corresponding github repository.
 
 # Change to appropriate directory
-cd $HOME/tools
+cd $HOME/Tools 
 
 # Perform the pull
 git pull origin master

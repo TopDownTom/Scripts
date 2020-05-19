@@ -1,0 +1,7 @@
+#! /bin/bash
+
+day=$( echo `date` | awk '{print $1}' )
+
+if [ $day == "Tue" ]; then
+	notify-send -u critical "IT'S TACO FUCKIN' TUESDAY!"
+fi

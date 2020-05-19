@@ -1,11 +1,12 @@
 #! /bin/bash
 
 scriptFolder="$PWD"
-scriptFile="$scriptFolder/$1.py"
+scriptFile="$scriptFolder/$1"
 
 if [[ -f $scriptFile ]]; then
 	echo "File Already Exists" # Check if a file with that name exists in $PWD
 else
 	echo -e 'import time \nimport numpy as np \nimport math \nimport pandas as pd \nimport csv \nimport scipy as sp \nfrom scipy import optimize \nfrom scipy.optimize import curve_fit \nfrom scipy import stats as stats \nimport matplotlib.pyplot as plt' > $scriptFile # auto add module imports
+	chmod +x $scriptFile # make it executable
 	vi $scriptFile # open it
 fi

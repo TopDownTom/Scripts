@@ -1,8 +1,8 @@
 #! /bin/bash
 
 # Uses i3-msg to open cmus if there isn't one running already, otherwise pauses/plays the music per normal operation. Script
-# is bound to the play/pause media key. 
-# Must have 'workspace_auto_back_and_forth yes' defined in i3/config to jump back to the workspace you were in previously.
+# bound to the play/pause media key. 
+# Must have workspace_auto_back_and_forth yes defined in i3/config to jump back to the workspace you were in previously if you launch it on workspace 10 rather than in scratchpad. 
 
 # gets current workspace, not used at the moment but wanted to keep for later potential use
 #space=$(i3-msg -t get_workspaces \
@@ -14,7 +14,8 @@ then
 	cmus-remote --pause
 else
 	i3-msg -t run_command 'exec urxvtc -name cmus -e cmus' # launches cmus in scratchpad (see i3/config)
-#	i3-msg -t run_command 'workspace 10; exec urxvtc -e cmus; workspace 10' > /dev/null  # launches cmus on workspace 10
+#	i3-msg -t run_command 'workspace 10; exec urxvtc -e cmus; workspace 10' > /dev/null 
+	sleep .2s # this allows cmus to be open long enough to receive the play/pause command
 	cmus-remote --pause
 fi
 exit
