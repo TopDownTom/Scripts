@@ -2,24 +2,35 @@
 
 # This script will utilize dmenu and xrandr to select the desired video output configuration
 
-connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
-echo -e "Your connected devices are:\n$connectedDevices"
-
 singleOrMultiMonitor=$( $1 | dmenu -p "Do you want a (s)ingle or (m)ulti-display configuration? " )
+connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
+primaryScreen=$( xrandr --query | grep -w "primary" | awk '{print $1}') 
+externalScreen=$( xrandr -q | grep -v "primary" | grep -w "connected" | awk '{print $1}' )
+resolution="1920x1080"
 
 if [ $singleOrMultiMonitor == "s" ]
 then
-	connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
-#	screenOutputOrientation=$( xrandr --output $screenOutputOrientation --auto )
+	whichScreen=$( $1 | echo -e "$connectedDevices" | dmenu -l 5 -p "Which screen would you like to use? ")
+	discardedScreen=$( xrandr --query | grep -w "connected" | grep -v "$whichScreen" | awk '{print $1}' )
+	xrandr --output $whichScreen --mode $resolution 
+	xrandr --output $discardedScreen --off
+	if [ $whichScreen == "$primaryScreen" ]
+	then
+		pacmd set-card-profile 0 output:analog-stereo
+	else
+		pacmd set-card-profile 0 output:hdmi-stereo-extra1
+	fi
+	notify-send -u normal "Moving display to $whichScreen"
 
 elif [ $singleOrMultiMonitor == "m" ]
 then
-	connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
-	laptopScreenPosition=$( $1 | xrandr --output eDP1 --help | dmenu -l 20 -p "Please choose from the output: " | sed 's/ //g' )
-	screenOutputOrientation=$( xrandr --output eDP1 $position --output HDMI2 )
+	primaryScreenRelPosition=$( $1 | xrandr --help | grep output | dmenu -l 20 -p "Where do you want the primary screen relative to external? " | awk '{print $1}' )
+	notify-send -u normal "Moving $primaryScreen $primaryScreenRelPosition $externalScreen"
+	xrandr --output $externalScreen --mode $resolution 
+	xrandr --output $primaryScreen --mode $resolution 
+	xrandr --output $primaryScreen $primaryScreenRelPosition $externalScreen
+#	chooseAudio
+fi
 
-
-#screenOutputOrientation=$( $1 | xrandr --output eDP1 --help | dmenu -l 20 -p "Please choose from the output: " | sed 's/ //g' )
-
-
-
+feh --bg-max $HOME/.pape.jpg
+$HOME/.config/polybar/launch > /dev/null 2>&1
