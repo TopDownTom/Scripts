@@ -1,9 +1,0 @@
-#! /bin/bash
-
-x=$1
-y=1
-while true; do
-	echo $y
-	(( y++ ))
-	sleep 1s
-done
