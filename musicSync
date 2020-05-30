@@ -1,16 +1,16 @@
 #! /bin/bash
 
-ls -R /home/tom/music 2>&1 > /home/tom/music/.musicLibraryCheck
-newMusic=$(diff /home/tom/music/.musicLibrary /home/tom/music/.musicLibraryCheck)
-[ -f /home/tom/.newMusicLocations ] && rm /home/tom/.newMusicLocations
+ls -R $HOME/music 2>&1 > $HOME/music/.musicLibraryCheck
+newMusic=$(diff $HOME/music/.musicLibrary $HOME/music/.musicLibraryCheck)
+[ -f $HOME/.newMusicLocations ] && rm $HOME/.newMusicLocations
 notify-send -u critical "music cron has run"
 
-#if [[ $newMusic ]]; then
-#	notify-send -u critical "There is new music, don't forget to convert and sync. View locations at ~/.newMusicLocations"
-#	echo "$newMusic" > /home/tom/.newMusic
-#	sed -i -e '1~2d' -e 's/^> //g' /home/tom/.newMusic
-#	while read a; do
-#		echo -e "$(find /home/tom/music -iname "$a")" >> /home/tom/.newMusicLocations
-#	done < /home/tom/.newMusic
-#	notify-send -u critical "If certain you're up to date, move ~/music/.musicLibraryCheck to ~/music/.musicLibrary"
-#fi
+if [[ $newMusic ]]; then
+	notify-send -u critical "There is new music, don't forget to convert and sync. View locations at ~/.newMusicLocations"
+	echo "$newMusic" > $HOME/.newMusic
+	sed -i -e '1~2d' -e 's/^> //g' $HOME/.newMusic
+	while read a; do
+		echo -e "$(find $HOME/music -iname "$a")" >> $HOME/.newMusicLocations
+	done < $HOME/.newMusic
+	notify-send -u critical "If certain you're up to date, move ~/music/.musicLibraryCheck to ~/music/.musicLibrary"
+fi
