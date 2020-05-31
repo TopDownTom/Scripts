@@ -194,3 +194,9 @@ sudo pacman -S --needed - < /path/to/pkglist.txt
 
 # If things don't work from here, investigate. This could be for a variety of reasons. Likely, if you've made it this far
 # though the installation went okay and its a matter of tweaking configs or whatever.
+
+#########
+# TO DO #
+#########
+- Add font installation
+- 
