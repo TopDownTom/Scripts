@@ -8,7 +8,7 @@ function converter() {
 	[[ -z `ls | grep -E "*.$typeFrom"` ]] && echo "No files matching type $typeFrom, exiting..." && getOut="true" && return
 	# Loop through all files in $PWD matching starting format, converting each
 	for file in *.$typeFrom;
-	do filename=`echo "${file%.*}"`;
+	do filename="${file%.$typeFrom}";
 		echo -e "Running: ffmpeg -hide_banner -nostats -loglevel warning -y -i "$file" "$filename.$typeTo"";
 		nice -18 ffmpeg -hide_banner -nostats -loglevel warning -y -i "$file" "$filename.$typeTo";
 	done
