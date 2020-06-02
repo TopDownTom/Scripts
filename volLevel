@@ -1,10 +1,12 @@
 #! /bin/bash
 
 # Gets the volume percentage
-vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | head -n 1 )
+amixerCmd=$( amixer |  grep -A6 -w \'Master\' | grep Front\ Left: | sed -e 's/\[//g ; s/\]//g' )
+vol=$( echo "$amixerCmd" | awk '{print $5}' )
+muted=$( echo "$amixerCmd" | awk '{print $7}' )
 
 # Echo the volume to the path the polybar module volLevel looks to cat. 
-if [ $vol == "0%" ]; then
+if [ "$muted" == "off" ]; then
 	echo "Muted" > $HOME/.config/polybar/volLevel
 else
 	echo $vol > $HOME/.config/polybar/volLevel
@@ -12,4 +14,3 @@ fi
 
 # Trigger the polybar ipc module
 polybar-msg hook volLevel 1
-

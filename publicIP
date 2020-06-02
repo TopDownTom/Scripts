@@ -6,7 +6,7 @@ function vpnConnected() {
 
 # Check connections
 con="$(vpnConnected)"
-enoup="$(cat /sys/class/net/enp24s0/operstate)"
+enoup="$(cat /sys/class/net/enp0s3/operstate)"
 [[ "$con" != "tun" ]] && disconnected="%{F#ff0000}" # if no vpn print IP in red
 #[[ "$con" != "Connected" ]] && disconnected="%{F#ff0000}" # if no vpn print IP in red
 
@@ -19,7 +19,7 @@ if [ "$con" == "Connected" ]; then
 	echo "$IP" 
 else
 #	IP=$(wget -q -O- https://api.ipify.org)
-	IP=$(ip route | grep enp | tail -n 1 | awk '{print $1}')
+	IP=$(ip a | grep -v '127.0.0.1' | grep 'inet ' | awk '{print $2}')
 	echo "${disconnected}$IP${F-}"
 #	echo $IP
 fi

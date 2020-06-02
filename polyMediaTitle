@@ -21,6 +21,6 @@ song="${_file##*/}" # remove everything up through the last /
 song="${song%.*}" # remove the filetype .filetype
 playing="${prefix}$artist - ${song}${F-}" # append Artist - Song
 
+sleep .1s 
 polybar-msg hook mediatitle 2 # update polybar using the second hook (hook-1)
 echo "$playing" > $outputFile # append the info from playing into opFile which is read by the polybar ipc module
-sleep .1s 
