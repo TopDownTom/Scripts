@@ -1,9 +1,11 @@
 #! /bin/bash
 
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus && export DBUS_SESSION_BUS_ADDRESS
+
 ls -R $HOME/music 2>&1 > $HOME/music/.musicLibraryCheck
 newMusic=$(diff $HOME/music/.musicLibrary $HOME/music/.musicLibraryCheck)
 [ -f $HOME/.newMusicLocations ] && rm $HOME/.newMusicLocations
-notify-send -u critical "music cron has run"
+[ -f $HOME/.newMusic ] && rm $HOME/.newMusic
 
 if [[ $newMusic ]]; then
 	notify-send -u critical "There is new music, don't forget to convert and sync. View locations at ~/.newMusicLocations"
@@ -12,5 +14,5 @@ if [[ $newMusic ]]; then
 	while read a; do
 		echo -e "$(find $HOME/music -iname "$a")" >> $HOME/.newMusicLocations
 	done < $HOME/.newMusic
-	notify-send -u critical "If certain you're up to date, move ~/music/.musicLibraryCheck to ~/music/.musicLibrary"
+	notify-send -u critical "If certain you're up to date, run: mv ~/music/.musicLibraryCheck ~/music/.musicLibrary"
 fi

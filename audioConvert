@@ -21,7 +21,7 @@ function removeOld() {
 	# If incorrect starting format was given, exit immediately
 	[[ "$getOut" == "true" ]] && return
 	# Show and confirm the current state of the directory prior to removal
-	echo -e "\n\nCurrent Directory:\n$(ls $PWD | column)\n"
+	echo -e "\n\nCurrent Directory:\n$(ls "$PWD" | column)\n"
 	read -p "Do you want to delete the original ($typeFrom) files? (y/N) " confirmDelete
 	# Unless 'y' specifically is given, exit to prevent accidental deletion
 	[[ "$confirmDelete" != "y" ]] && echo "Incorrect Key or 'N' Selected. Not Deleting..." && return
@@ -33,7 +33,7 @@ function removeOld() {
 confirmed=false
 while ! $confirmed; do
 	# Show and confirm the current state of the directory
-	echo -e "\nFiles to convert:\n$(ls $PWD | column)\n"
+	echo -e "\nFiles to convert:\n$(ls "$PWD" | column)\n"
 	read -p "Do these files look correct? (y/N) " confirm 
 	# If the directory is where you intend to be, proceed
 	[[ "$confirm" == "y" ]] && confirmed=true && converter && removeOld && break
