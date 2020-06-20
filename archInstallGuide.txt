@@ -79,7 +79,7 @@ mount /dev/xX1 /mnt
 vim /etc/pacman.d/mirrorlist
 pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh
 
-[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, alsa-utils ]
+[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, alsa-utils, vi, i3, fakeroot ]
 
 
 # Generate your file system table. Afterwards check /mnt/etc/fstab for errors.
@@ -181,14 +181,27 @@ rsync -av /path/to/old /var/cache/pacman/pkg
 # Get the config files for your system. If your new machine is closer in setup to the thinkpad or desktop choose the
 # correct branch.
 git clone git@github.com:TopDownTom/dotfiles.git $HOME/.files
+cd $HOME/.files
+git checkout <desired branch>
+rm $HOME/.bashrc
+stow -vt ~ *
+git clone git@github.com:TopDownTom/scripts.git $HOME/docs/scripts
+cd $HOME/docs/scripts
 git checkout <branch you need> 
 
+# Install fonts
+curl https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DaddyTimeMono.zip
 
 # Deploy the config files. Run first with -n flag to ensure everything looks right. Then run it again without -n if it does.
 # Stow can be a bit tricky, you may need to do this one at a time. Also, Firefox will not work for userChrome because the
 # profile directory is a randomString.default-release so this will need to be updated to the new directory once Firefox
 # is installed.
 stow -nvt ~ *
+
+# Install yay
+mkdir -p $HOME/dl/builds
+git clone https://aur.archlinux.org/yay.git $HOME/dl/builds
+
 
 
 # Install your old packages
