@@ -79,7 +79,7 @@ mount /dev/xX1 /mnt
 vim /etc/pacman.d/mirrorlist
 pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh
 
-[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, alsa-utils, vi, i3, fakeroot ]
+[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, alsa-utils, vi, i3, fakeroot, wget, which,
 
 
 # Generate your file system table. Afterwards check /mnt/etc/fstab for errors.
@@ -175,6 +175,12 @@ visudo
 
 # Exit the root user then log in to the user to verify functionality
 # Optionally, reboot to ensure everything is still working as intended. Log in as user on reboot.
+
+
+# Ensure the timezone is set correctly
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
+
+
 # If migrating from an old setup copy the pacman cache to this new machine.
 rsync -av /path/to/old /var/cache/pacman/pkg
 
@@ -185,15 +191,24 @@ cd $HOME/.files
 git checkout <desired branch>
 rm $HOME/.bashrc
 stow -vt ~ *
+
+# Point vim to use my config
+sudo rm /usr/bin/vi
+sudo ln -s /usr/bin/nvim /usr/bin/vi
+sudo -i
+sudo echo "source /home/tom/.files/vim/.config/vim/vimrc" >> /etc/vimrc
+
 git clone git@github.com:TopDownTom/scripts.git $HOME/docs/scripts
 cd $HOME/docs/scripts
-git checkout <branch you need> 
+git checkout <desired branch> 
+
 
 # Install fonts
 cd $HOME/dl/builds
 cp $HOME/.files/packagedGoods/DaddyTimeMono.zip $HOME/dl/builds
 sudo mkdir /usr/share/fonts/DaddyTimeMono
-sudo unzip DaddyTimeMono.zip -d /usr/share/fonts/DaddyTimeMono
+sudo unzip -o DaddyTimeMono.zip -d /usr/share/fonts/DaddyTimeMono
+
 
 # Deploy the config files. Run first with -n flag to ensure everything looks right. Then run it again without -n if it does.
 # Stow can be a bit tricky, you may need to do this one at a time. Also, Firefox will not work for userChrome because the
@@ -201,9 +216,16 @@ sudo unzip DaddyTimeMono.zip -d /usr/share/fonts/DaddyTimeMono
 # is installed.
 stow -nvt ~ *
 
+
 # Install yay
 mkdir -p $HOME/dl/builds
 git clone https://aur.archlinux.org/yay.git $HOME/dl/builds
+
+
+# Install polybar
+yay -Syu polybar
+# Run polybar
+polyReload
 
 
 
@@ -216,5 +238,4 @@ sudo pacman -S --needed - < /path/to/pkglist.txt
 #########
 # TO DO #
 #########
-- Add font installation
-- 
+- Do some more run-throughs with the frequently updated package list 
