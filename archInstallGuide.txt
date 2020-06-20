@@ -74,12 +74,10 @@ mount /dev/xX1 /mnt
 
 # Installation
 
-# Update your mirrorlist and put a few United States mirros at the top of the list.
+# Update your mirrorlist and put a few United States mirrors at the top of the list.
 # Install only essential packages. Wait to install user packages once the system is functional on its own.
 vim /etc/pacman.d/mirrorlist
-pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh
-
-[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, alsa-utils, vi, i3, fakeroot, wget, which, rsync, :
+pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh rxvt-unicode cmus dmenu xorg-xrandr unzip firefox tmux alsa-utils vi i3 fakeroot wget which rsync xorg-xsetroot zathura zathura-poppler bash-completion cronie downgrade gzip make mpv network-manager-applet tar
 
 
 # Generate your file system table. Afterwards check /mnt/etc/fstab for errors.
@@ -184,6 +182,7 @@ ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 # If migrating from an old setup copy the pacman cache to this new machine.
 rsync -av /path/to/old /var/cache/pacman/pkg
 
+
 # Get the config files for your system. If your new machine is closer in setup to the thinkpad or desktop choose the
 # correct branch.
 git clone git@github.com:TopDownTom/dotfiles.git $HOME/.files
@@ -229,8 +228,6 @@ polyReload
 
 
 
-# Install your old packages
-sudo pacman -S --needed - < /path/to/pkglist.txt
 
 # If things don't work from here, investigate. This could be for a variety of reasons. Likely, if you've made it this far
 # though the installation went okay and its a matter of tweaking configs or whatever.
