@@ -190,7 +190,9 @@ cd $HOME/docs/scripts
 git checkout <branch you need> 
 
 # Install fonts
-curl https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DaddyTimeMono.zip
+cd $HOME/dl/builds
+curl -o $HOME/dl/builds/DaddyTimeMono.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/DaddyTimeMono.zip
+unzip DaddyTimeMono.zip
 
 # Deploy the config files. Run first with -n flag to ensure everything looks right. Then run it again without -n if it does.
 # Stow can be a bit tricky, you may need to do this one at a time. Also, Firefox will not work for userChrome because the
