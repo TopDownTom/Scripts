@@ -77,7 +77,9 @@ mount /dev/xX1 /mnt
 # Update your mirrorlist and put a few United States mirros at the top of the list.
 # Install only essential packages. Wait to install user packages once the system is functional on its own.
 vim /etc/pacman.d/mirrorlist
-pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog
+pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh
+
+[ rxvt-unicode, cmus, dmenu, xorg-xrandr, unzip, firefox, tmux, ]
 
 
 # Generate your file system table. Afterwards check /mnt/etc/fstab for errors.
@@ -126,7 +128,7 @@ mkinitcpio -P
 passwd
 
 
-# Boot loader (i use grub for this in MBR format. Install to whatever partition is root)
+# Boot loader (i use grub for this in MBR format. Install to the disk, NOT a partition)
 grub-install --target=i386-pc /dev/xX
 
 
