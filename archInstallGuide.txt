@@ -1,20 +1,3 @@
-View this installation guide online at
-https://wiki.archlinux.org/index.php/Installation_Guide
-
-   This document is a guide for installing Arch Linux from the live system
-   booted with the official installation image. Before installing, it
-   would be advised to view the FAQ. 
-
-   For more detailed instructions, see the respective ArchWiki articles or
-   the various programs' man pages.
-
-   Arch Linux should run on any x86_64-compatible machine with a minimum
-   of 512 MiB RAM. A basic installation should take less than 800 MiB of
-   disk space. As the installation process needs to retrieve packages from
-   a remote repository, this guide assumes a working internet connection
-   is available.
-
-
 ########################################
 ######     Begin-installation     ######
 ########################################
@@ -28,7 +11,7 @@ pacman-key -v archlinux-version-x86_64.iso.sig
 
 
 # Verify the boot mode
-# I will always be installing as MBR, no need for UEFI and the boot partition. 
+# I will always be installing as MBR, no need for UEFI and the boot partition. This step un-necessary in most cases.
 ls /sys/firmware/efi/efivars
 
 
@@ -52,7 +35,7 @@ timedatectl set-ntp true
 fdisk -l
 
 
-#If you want to create any stacked block devices for LVM, system encryption or RAID, do it now.
+# If you want to create any stacked block devices for LVM, system encryption or RAID, do it now.
 fdisk /dev/xX
 
 
@@ -77,7 +60,8 @@ mount /dev/xX1 /mnt
 # Update your mirrorlist and put a few United States mirrors at the top of the list.
 # Install only essential packages. Wait to install user packages once the system is functional on its own.
 vim /etc/pacman.d/mirrorlist
-pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh rxvt-unicode cmus dmenu xorg-xrandr unzip firefox tmux alsa-utils vi i3 fakeroot wget which rsync xorg-xsetroot zathura zathura-poppler bash-completion cronie downgrade gzip make mpv network-manager-applet tar
+pacstrap /mnt base linux linux-firmware networkmanager stow git grub amd-ucode gcc make perl xorg-server xorg-xinit neovim dosfstools os-prober wpa_supplicant dialog sudo openssh rxvt-unicode cmus dmenu xorg-xrandr unzip firefox tmux alsa-utils vi i3 fakeroot wget which rsync xorg-xsetroot zathura zathura-pdf-poppler bash-completion cronie gzip make mpv network-manager-applet xwallpaper python-pip openvpn
+
 
 
 # Generate your file system table. Afterwards check /mnt/etc/fstab for errors.
@@ -89,11 +73,12 @@ arch-chroot /mnt
 
 
 # Set the time zone and sync the system to the hardware clock 
-ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 hwclock --systohc
+ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 
 
 # Localization. Uncomment en_US.UTF-8 UTF-8 and other needed locales in /etc/locale.gen, and generate them.
+echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
 locale-gen
 
 
@@ -103,17 +88,14 @@ vim /etc/locale.conf
 
 
 # Create the hostname file /etc/hostname and add whatever hostname you want to the first line
+echo "archVMtest" > /etc/hostname
 vim /etc/hostname
 
 
 # Add matching entries to hosts(5):
 # If the system has a permanent IP address, it should be used instead of 127.0.1.1.
-vim /etc/hosts
-
-# Add the following:
-	127.0.0.1       localhost
-	::1             localhost
-	127.0.1.1       myhostname.localdomain  myhostname
+echo "127.0.0.1 localhost" > /etc/hosts
+echo "::1 localhost" >> /etc/hosts
 
 
 # Initramfs
@@ -122,16 +104,16 @@ vim /etc/hosts
 mkinitcpio -P
 
 
-# Set the root password
-passwd
-
-
 # Boot loader (i use grub for this in MBR format. Install to the disk, NOT a partition)
 grub-install --target=i386-pc /dev/xX
 
 
 # Generate the main grub config file
 grub-mkconfig -o /boot/grub/grub.cfg
+
+
+# Set the root password
+passwd
 
 
 # Exit the chroot environment 
@@ -151,7 +133,6 @@ umount -R /mnt
 
 # Log in with root
 # Enable networking
-systemctl start NetworkManager
 systemctl enable --now NetworkManager
 
 
@@ -183,6 +164,13 @@ ln -sf /usr/share/zoneinfo/Region/City /etc/localtime
 rsync -av /path/to/old /var/cache/pacman/pkg
 
 
+# Set up ssh keys
+ssh-keygen
+
+
+# Add your key to github
+
+
 # Get the config files for your system. If your new machine is closer in setup to the thinkpad or desktop choose the
 # correct branch.
 git clone git@github.com:TopDownTom/dotfiles.git $HOME/.files
@@ -196,6 +184,7 @@ sudo rm /usr/bin/vi
 sudo ln -s /usr/bin/nvim /usr/bin/vi
 sudo -i
 sudo echo "source /home/tom/.files/vim/.config/vim/vimrc" >> /etc/vimrc
+exit
 
 git clone git@github.com:TopDownTom/scripts.git $HOME/docs/scripts
 cd $HOME/docs/scripts
@@ -203,6 +192,7 @@ git checkout <desired branch>
 
 
 # Install fonts
+mkdir -p $HOME/dl/builds
 cd $HOME/dl/builds
 cp $HOME/.files/packagedGoods/DaddyTimeMono.zip $HOME/dl/builds
 sudo mkdir /usr/share/fonts/DaddyTimeMono
@@ -217,8 +207,10 @@ stow -nvt ~ *
 
 
 # Install yay
-mkdir -p $HOME/dl/builds
-git clone https://aur.archlinux.org/yay.git $HOME/dl/builds
+mkdir $HOME/dl/builds/yay
+git clone https://aur.archlinux.org/yay.git $HOME/dl/builds/yay
+cd $HOME/dl/builds/yay
+makepkg -si
 
 
 # Install polybar
@@ -227,10 +219,23 @@ yay -Syu polybar
 polyReload
 
 
+# Exit then re-login with user and things should work
 
 
 # If things don't work from here, investigate. This could be for a variety of reasons. Likely, if you've made it this far
 # though the installation went okay and its a matter of tweaking configs or whatever.
+
+
+
+# Configuring Firefox
+move $HOME/.files/homeDirFiles/.mozilla/firefox/*.default-release/chrome to whatever ~/.mozilla/firefox/*.default-release you have for your current install
+in about:config - change toolkit.legacyUserProfileCustomizations.stylesheeets to true
+make changes to View > Toolbars > Customize...
+about:config - media.peerconnection.enabled -> false
+
+
+# Install protonvpn then configure it
+sudo pip3 install protonvpn-cli 
 
 #########
 # TO DO #
