@@ -1,14 +1,14 @@
 #! /bin/bash
 
 # Gets the volume percentage
-vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | head -n 1 )
-muted=$( pacmd list-sinks | grep muted: | awk '{print $2}' )
+vol=$(pamixer --get-volume)
+muted=$(pamixer --get-mute)
 
 # Echo the volume to the path the polybar module volLevel looks to cat. 
-if [ $muted == "yes" ]; then
+if [ $muted == "true" ]; then
 	echo "Muted" > $HOME/.config/polybar/volLevel
 else
-	echo $vol > $HOME/.config/polybar/volLevel
+	echo "$vol%" > $HOME/.config/polybar/volLevel
 fi
 
 # Trigger the polybar ipc module
