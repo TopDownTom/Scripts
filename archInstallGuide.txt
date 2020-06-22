@@ -219,6 +219,10 @@ yay -Syu polybar
 polyReload
 
 
+# Install pydflatex
+yay -Syu pydflatex
+
+
 # Exit then re-login with user and things should work
 
 
