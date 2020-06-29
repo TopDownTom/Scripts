@@ -3,5 +3,5 @@
 videoName=$(youtube-dl -e `xclip -o`)
 
 notify-send -u low -t 2000 "Fetching video: $videoName"
-#mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" `xclip -o`
-mpv --ytdl-format=best `xclip -o`
+mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" `xclip -o`
+#mpv --ytdl-format=best `xclip -o`
