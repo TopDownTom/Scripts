@@ -7,6 +7,6 @@ if [[ -f $script_file ]]; then
 	echo "File Already Exists" # Check if a file with that name exists in $HOME/Tools
 else
 	echo '#! /bin/bash' > $script_file # Add the she-bang to the first line of the script
-	chmod 654 $script_file # make it executable
+	chmod 754 $script_file # make it executable
 	vi $script_file # open it
 fi
