@@ -8,8 +8,10 @@ disconnected="%{F#ff0000}"
 
 if [ "$(nmcli c s  | grep tun)" ]; then
 	server=$(protonvpn status | grep -E "IP:|Server:" | awk '{print $2}' | tr '\n' ' ' | awk '{print $2": "$1}')
-	echo "$server"
+	echo $server
+	echo && echo "#33cc33" # color formatting i3blocks
 else
 	IP=$(wget --no-check-certificate -q -O- https://api.ipify.org)
-	echo "${disconnected}$IP${F-}"
+	echo $IP
+	echo && echo "#FF0000" # color formatting for i3blocks
 fi

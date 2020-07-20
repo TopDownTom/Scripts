@@ -6,11 +6,7 @@ muted=$(pamixer --get-mute)
 
 # Echo the volume to the path the polybar module volLevel looks to cat. 
 if [ $muted == "true" ]; then
-	echo "Muted" > $HOME/.config/polybar/volLevel
+	echo "Muted" 
 else
-	echo "$vol%" > $HOME/.config/polybar/volLevel
+	echo "$vol%"
 fi
-
-# Trigger the polybar ipc module
-polybar-msg hook volLevel 1
-
