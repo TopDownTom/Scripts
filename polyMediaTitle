@@ -1,26 +1,22 @@
 #! /bin/bash
-# Inspired by the youtube channel budlabs in this video: https://www.youtube.com/watch?v=oKBDI-zVJq0 
-
-outputFile="$HOME/.cache/polyMediaOutput"
-
-while test $# -ge 2
-do
-	eval _$1='$2' # evalutate the first variable (first line) with it's value found in the line below. Repeat for all output. To see the original output of this run echo "$@" > $outputFile 
-	shift
-	shift
-done
-
-#[[ $_status != playing ]] && prefix="%{F#a6a6a6}" || prefix="%{F#e69809}" # colorize $playing to grey if paused, gold if playing.
 
 # The specifics of this naming convention is a product of how I save music files and will vary depending on your needs. 
 # This changes the form: /home/user/Music/Artist/Album/Song.filetype ---> Artist - Song
 
-artist="${_file##*music/}" # remove everything up through Music/
+file="$(cmus-remote -Q | sed -n '2p' | awk '{$1=""; print $0}' | cut -d' ' -f 2-)"
+
+artist="${file##*music/}" # remove everything up through Music/
 artist="${artist%%/*}" # remove everything between $artist and through to the last /
-song="${_file##*/}" # remove everything up through the last /
+song="${file##*/}" # remove everything up through the last /
 song="${song%.*}" # remove the filetype .filetype
 playing="$artist - ${song}" # append Artist - Song
 
-echo "$playing" > $outputFile 
-echo && echo "#FF0000"
-pkill -SIGRTMIN+1 i3blocks
+if [ $(cmus-remote -Q | grep status | awk '{print $2}') = "playing" ]; then
+	echo $playing
+	echo && echo "#e69809"
+	pkill -SIGRTMIN+1 i3blocks
+else
+	echo $playing
+	echo && echo "#b3b3b3"
+	pkill -SIGRTMIN+1 i3blocks
+fi
