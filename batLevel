@@ -7,14 +7,13 @@ discharging=$(cat /sys/class/power_supply/BAT1/status)
 green="%{F#00cc00}"
 yellow="%{F#ffff00}"
 
-if [ $discharging == "Discharging" ] && [ "$bat_capac" -le "20" ]; then
+if [ $discharging == "Discharging" ] && [ "$bat_capac" -le "10" ]; then
 	systemctl suspend
 
 elif [ $discharging == "Discharging" ]; then
-	echo "${yellow}$bat_capac${F-}%"
-
+	echo "$bat_capac%"
+	echo && echo "#e89709"
 else
-	echo "${green}$bat_capac${F-}%"
+	echo "$bat_capac%"
+	echo && echo "#33cc33"
 fi
-
-	
