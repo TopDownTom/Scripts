@@ -13,11 +13,9 @@ red="%{F#ff0000}"
 if [ $state == "1" ]; then
 	xinput --disable "SynPS/2 Synaptics TouchPad"
 	echo "${red}T${F-}" >> $output
-	polybar-msg hook touchpad 1
 elif [ $state == "0" ]; then
 	xinput --enable "SynPS/2 Synaptics TouchPad"
 	echo "${green}T${F-}" >> $output
-	polybar-msg hook touchpad 1
 fi
 
 if [ "$1" == "off" ]; then

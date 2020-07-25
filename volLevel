@@ -8,15 +8,14 @@ else
 fi
 
 # Gets the volume percentage
-#vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | sed -n "${card}p" )
-vol=$( pacmd list-sinks | grep -e 'volume' | awk '{print $5}' | head -n 1 )
+vol=$( pamixer --get-volume-human )
+muted=$( pamixer --get-mute )
 
-# Echo the volume to the path the polybar module volLevel looks to cat. 
-if [ $vol == "0%" ]; then
-	echo "Muted" > $HOME/.config/polybar/volLevel
+# Echo the volume to the path the polybar module volLevel looks to cat.
+if [ $muted == "true" ]; then
+	echo "Muted"
+	echo && echo "#ff0000"
 else
-	echo $vol > $HOME/.config/polybar/volLevel
+	echo $vol
+	echo && echo "#d9d9d9"
 fi
-
-# Trigger the polybar ipc module
-polybar-msg hook volLevel 1
