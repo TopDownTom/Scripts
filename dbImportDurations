@@ -1,0 +1,10 @@
+#! /bin/bash
+
+# Find env names and their versions
+find /backup/*/cswapi_* -maxdepth 0 -type d -exec echo {} \; -exec cat {}/version \;
+
+# Find env database sizes, sans prop_log and prop_history
+xz -l `find /backup/*/database/cswapi_* -maxdepth 0 -exec sh -c 'ls {} | grep "daily-200812"' \;`
+
+# Grep for database import time
+grep -A5 "CREATE DATABASE" logfile.log | cut -d' ' -f3- | grep -iv "a password"

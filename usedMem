@@ -7,7 +7,9 @@ blue="%{F#6992c5}"
 mem=$(free -m | grep Mem: | awk '{print $3}')
 
 if [ "${#mem}" -gt 3 ]; then
-	echo "${blue}${mem%???}.${mem:1:2}${F-} GB" # regex and color formatting
+	echo "${mem%???}.${mem:1:2} GB" # regex and color formatting
+	echo && echo "#0066ff"
 else
-	echo "${blue}$mem${F-} MB"
+	echo "$mem MB"
+	echo && echo "#0066ff"
 fi

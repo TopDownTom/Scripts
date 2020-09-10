@@ -2,7 +2,7 @@
 
 # Check connections
 wired="$(cat /sys/class/net/e*/operstate)"
-disconnected="%{F#ff0000}"
+private=$(ip a | grep `ls /sys/class/net/ | grep -v lo` | grep 'inet ' | awk '{print $2}')
 
 [ "$wired" == "down" ] && echo "Internet Disconnected"
 
@@ -11,5 +11,6 @@ if [ "$(nmcli c s  | grep tun)" ]; then
 	echo "$server"
 else
 	IP=$(wget --no-check-certificate -q -O- https://api.ipify.org)
-	echo "${disconnected}$IP${F-}"
+	echo -e "$IP | $private"
+	echo && echo "#ff0000"
 fi
