@@ -2,6 +2,8 @@
 
 # Creates a Jira post report for an environment based on user inputs 
 
+# Path information. These are very specific to my setup. Change the paths to match your documents and repos.
+# Use full paths since this script will usually be called from anywhere. 
 sadPath=~/repos/siteportal_ansible_deploy
 postNotes=~/vmShared/post-docs/00-posting-notes.txt
 postTemplate=~/vmShared/post-docs/jira-template-post-report.txt
@@ -28,7 +30,8 @@ date=$(date "+%Y%m%d")
 # Make the substitutions from the template and output those subs into the post report
 echo "$(sed "s/\$ENV/$ENV/g; \
 	s/\$HOST/${HOST^^}/g; \
-	s/\$IP/$IP\/$ENV/g; \
+	s/\$URL/$IP\/$ENV/g; \
+	s/\$IP/$IP/g; \
 	s/\$UNIFIEDPLATFORM/$UNIFIEDPLATFORM/g; \
 	s/\$FROM/$FROM/g; \
 	s/\$TO/$TO/g; \
@@ -39,7 +42,7 @@ echo "$(sed "s/\$ENV/$ENV/g; \
 	s/\$snmpVersion/$snmpVersion/g; \
 	s/\$unifiedAppsvrVersion/$unifiedAppsvrVersion/g; \
 	s/\$unifiedNgVersion/$unifiedNgVersion/g; \
-	s/\$date/$date/g; " $postTemplate)" > $outputPath
+	s/\$date/$date/g; " $postTemplate )" > $outputPath
 
 # Also copy the report to the clipboard to post into Jira. 
 echo -e "Template created for this post located at: \n $outputPath"
