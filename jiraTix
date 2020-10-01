@@ -29,7 +29,7 @@ date=$(date "+%Y%m%d")
 
 # Make the substitutions from the template and output those subs into the post report
 echo "$(sed "s/\$ENV/$ENV/g; \
-	s/\$HOST/${HOST^^}/g; \
+	s/\$HOST/$HOST/g; \
 	s/\$URL/$IP\/$ENV/g; \
 	s/\$IP/$IP/g; \
 	s/\$UNIFIEDPLATFORM/$UNIFIEDPLATFORM/g; \
