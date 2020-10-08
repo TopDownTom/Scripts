@@ -18,6 +18,8 @@ read -p "Version TO: " TO
 
 outputPath=~/vmShared/post-docs/$ENV-jira-report.txt
 
+# The ENV name is important and needs to match whatever is written next to "environment:" in 00-posting-notes.txt
+# sed matches the next instances of the following variables after finding ENV in 00-posting-notes.txt
 sadTag=$(cd $sadPath && git describe)
 sadBranch=$(cd $sadPath && git branch | awk '/\*/{print $2}')
 unifiedApiVersion=$(sed -n "/$ENV/,/Unified API/{p; /Unified API/q}" $postNotes | grep -w 'Unified API')
