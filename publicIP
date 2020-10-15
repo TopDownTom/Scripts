@@ -13,5 +13,5 @@ if [ "$(nmcli c s  | grep tun)" ]; then
 else
 	IP=$(wget --no-check-certificate -q -O- https://api.ipify.org)
 	echo $IP
-	echo && echo "#FF0000" # color formatting for i3blocks
+	echo "#000000" && echo "#FF0000" # color formatting for i3blocks
 fi
