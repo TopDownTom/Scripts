@@ -1,36 +1,59 @@
 #! /bin/bash
 
-# This script will utilize dmenu and xrandr to select the desired video output configuration
+# This script utilizes xrandr to select the desired video output configuration and switches audio output accordingly
 
-singleOrMultiMonitor=$( $1 | dmenu -p "Do you want a (s)ingle or (m)ulti-display configuration? " )
-connectedDevices=$( xrandr --query | grep -w "connected" | awk '{print $1}' )
+read -p "Single or Multi display? " singleOrMultiMonitor
+connectedDevices=($( xrandr --query | grep -w "connected" | awk '{print $1}' ))
 laptopScreen=$( xrandr --query | grep -w "primary" | awk '{print $1}') 
 externalScreen=$( xrandr -q | grep -v "primary" | grep -w "connected" | awk '{print $1}' )
 resolution="1920x1080"
 
 if [ $singleOrMultiMonitor == "s" ]
 then
-	whichScreen=$( $1 | echo -e "$connectedDevices" | dmenu -l 5 -p "Which screen would you like to use? ")
-	discardedScreen=$( xrandr --query | grep -w "connected" | grep -v "$whichScreen" | awk '{print $1}' )
-	xrandr --output $whichScreen --mode $resolution 
-	xrandr --output $discardedScreen --off
-	if [ $whichScreen == "$laptopScreen" ]
-	then
-		pacmd set-card-profile 0 output:analog-stereo
-	else
-		pacmd set-card-profile 0 output:hdmi-stereo-extra1
-	fi
-	notify-send -u normal "Moving display to $whichScreen"
+	echo "Which screen would you like to use?"
+	select whichScreen in "${connectedDevices[@]}" Exit;
+	do
+		case $whichScreen in
+			Exit)
+				printf '\n...Exiting, doing nothing...\n\n'
+				break
+				;;
+			*)
+				echo "using $whichScreen"
+				discardedScreen=$( xrandr --query | grep -w "connected" | grep -v "$whichScreen" | awk '{print $1}' )
+				xrandr --output $whichScreen --mode $resolution 
+				xrandr --output $discardedScreen --off
+				if [ $whichScreen == "$laptopScreen" ]
+				then
+					pacmd set-card-profile 0 output:analog-stereo
+				else
+					pacmd set-card-profile 0 output:hdmi-stereo-extra1
+				fi
+				notify-send -u normal "Moving display to $whichScreen"
+				break
+				;;
+		esac
+	done
 
 elif [ $singleOrMultiMonitor == "m" ]
 then
-	laptopScreenRelPosition=$( $1 | xrandr --help | grep output | dmenu -l 20 -p "Where do you want the laptop screen relative to external? " | awk '{print $1}' )
-	notify-send -u normal "moving $laptopScreen $laptopScreenRelPosition external monitor"
-	xrandr --output HDMI2 --mode $resolution 
-	xrandr --output $laptopScreen --mode $resolution 
-	xrandr --output $laptopScreen $laptopScreenRelPosition HDMI2
-	chooseAudio
+	possibleRelPositions=( left-of right-of above below same-as )
+	select laptopScreenRelPosition in "${possibleRelPositions[@]}" Exit;
+		do
+			case $laptopScreenRelPosition in
+				Exit)
+					printf '\n...Exiting, no changes made... \n\n'
+					break
+					;;
+				*)
+					echo "Setting laptop screen $laptopScreenRelPosition external monitor"
+					notify-send -u normal "Moving $laptopScreen $laptopScreenRelPosition external monitor"
+					xrandr --output HDMI2 --mode $resolution 
+					xrandr --output $laptopScreen --mode $resolution 
+					xrandr --output $laptopScreen --$laptopScreenRelPosition HDMI2
+					chooseAudio
+					break
+					;;
+			esac
+		done
 fi
-
-feh --bg-max $HOME/.pape.jpg
-$HOME/.config/polybar/launch > /dev/null 2>&1
