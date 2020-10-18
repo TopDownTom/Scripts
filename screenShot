@@ -2,7 +2,7 @@
 
 outputPath=$HOME/pix
 loop=1
-[[ pgrep picom ]] && killall picom
+pgrep -x picom && killall picom
 
 while [ "$loop" -eq 1 ]
 do
