@@ -1,7 +1,0 @@
-#! /bin/bash
-
-if pgrep picom; then
-	killall picom
-elif ! pgrep picom; then
-	picom & disown
-fi

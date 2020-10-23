@@ -1,21 +1,4 @@
 #! /bin/bash
 
-# Find which card is active, HDMI or Laptop default
-if [ $(pacmd list-sinks | grep -e '*' | awk '{print $3}') = 0 ]; then
-	card=14 # HDMI
-else
-	card=4 # Laptop default
-fi
-
-# Gets the volume percentage
-vol=$( pamixer --get-volume-human )
-muted=$( pamixer --get-mute )
-
-# Echo the volume to the path the polybar module volLevel looks to cat.
-if [ $muted == "true" ]; then
-	echo "Muted"
-	echo && echo "#ff0000"
-else
-	echo $vol
-	echo && echo "#d9d9d9"
-fi
+# Echo the volume to the path the polybar module volLevel looks to cat. 
+[[ "`pamixer --get-mute`" == "true" ]] && echo Muted || echo `pamixer --get-volume`%
