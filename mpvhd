@@ -1,3 +1,0 @@
-#! /bin/bash
-
-mpv --ytdl-format="(best[height<=1080]/bestvideo+bestaudio)" $(xclip -o)

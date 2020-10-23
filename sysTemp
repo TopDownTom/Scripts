@@ -1,12 +1,14 @@
 #! /bin/bash
 
-# A simple system temperature module for polybar
+# A simple system temperature module
 
-#temp=$(cat /sys/class/thermal/thermal_zone0/temp)
-temp=$( sensors | grep Tdie | awk '{print $2}' )
-tempHigh=${temp##*+}
-red="%{F#b6465f}"
-gold="%{F#e89709}"
+temp=$( sensors | grep Tdie | awk '{print $2}' | cut -d'+' -f2-)
+tempRaw=${temp%*°C}
+red="#b6465f"
+gold="#e89709"
 
-#echo $tempHigh
-echo -e "${gold}${tempHigh}${F-}"
+if [ `bc <<< "$tempRaw < 50"` ]; then
+	echo $tempRaw°C && echo && echo "#e89709"
+else
+	echo $tempRaw°C && echo && echo "#ff0000"
+fi

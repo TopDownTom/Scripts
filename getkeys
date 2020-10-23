@@ -1,8 +1,0 @@
-#! /bin/bash
-
-id=$( xwininfo -tree -root | grep URxvt | head -n 1 | awk '{print $1}' )
-#key=$( xev -id $id | grep "state 0x0" | awk '{print $7}' | grep '[0-9A-Za-z_]' )
-#key=$( xev -id $id | head -n 5 | grep keysym | awk '{print $5 $6 $7}' )
-key=$( xev -id $id )
-#echo $id
-echo $key
