@@ -42,7 +42,7 @@ chmod 700 "$COMMANDS"	# For security, so noone can make us execute arbitrary com
 cp "$ORIG_NAMES" "$NEW_NAMES"
 
 # Allow the user to edit the filenames
-vim +1 -c "nnoremap dd ^D" "$NEW_NAMES"
+vi +1 -c "nnoremap dd ^D" "$NEW_NAMES"
 
 # Check if the edited file has the correct number of lines
 if [ "$(wc -l < $ORIG_NAMES)" != "$(wc -l < "$NEW_NAMES")" ]

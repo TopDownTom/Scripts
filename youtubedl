@@ -23,7 +23,7 @@ else
 		if [ $convert == "y" ]; then
 			ffmpeg -y -i "$name.$fileType" "$name.mp3"
 		fi
-#		rm $name.$fileType
+		rm "$name".$fileType
 
 	else
 		youtube-dl -f $formatType -o "%(title)s.$fileType" $url

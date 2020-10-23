@@ -2,7 +2,13 @@
 
 outputPath=$HOME/pix
 loop=1
+<<<<<<< HEAD
 pgrep -x picom && killall picom
+=======
+if pgrep -x "picom"; then 
+	killall picom 
+fi
+>>>>>>> master
 
 while [ "$loop" -eq 1 ]
 do
