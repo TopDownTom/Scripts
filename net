@@ -41,33 +41,3 @@ elif [ $type == "wifi" ]; then
 		nmcli dev wifi connect "$accessChoice" --ask
 	fi
 fi
-
-# Currently commented out because I have switched VPN providers.
-# Connect to a pre-loaded VPN file?
-vpn=$($1 | dmenu -p "Connect to vpn? (y/n):")
-#
-if [ $vpn == "y" ]; then
-	st -e sudo protonvpn c
-##	vpnChoice=$(nmcli con | grep nord* | awk '{print $1}' |  dmenu -l 20 -p "Which one?:") # The grep will be different
-### for whoever your VPN service is
-##	nmcli con up $vpnChoice --ask
-#
-#	vpnCountry=$( $1 | dmenu -p "Which country? (sw/ca/us):" )
-#
-#	nordvpn disconnect > /dev/null
-#	city=$( shuf $HOME/network/${vpnCountry}Cities | head -n 1 ) > /dev/null
-#	if [ "$vpnCountry" == "sw" ];
-#	then
-#		country="Switzerland"
-#		city="Zurich"
-#	elif [ "$vpnCountry" == "ca" ];
-#	then
-#		country="Canada"
-#	elif [ "$vpnCountry" == "us" ];
-#	then
-#		country="United_States"
-#	else
-#		notify-send -u low -t 2500 "Choosing random server.."
-#	fi
-#	vpnConnect
-#fi

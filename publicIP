@@ -1,21 +1,7 @@
 #! /bin/bash
 
-# Check connections
+# Obtain IP address if online, and indicate if VPN tunnels are up
 
-activeConnection=$(ip ro | grep default | awk '{print $5}')
-activeTunnels=$(nmcli c s | grep tun)
-#[[ ! -z $activeTunnels ]] && echo tun up
-IP=$(wget --no-check-certificate -q -O- https://api.ipify.org)
-echo $IP
-echo && echo "#FF0000" # color formatting for i3blocks
-
-
-#if [ "$activeTunnels" != "" ]; then
-#	server=$(protonvpn status | grep -E "IP:|Server:" | awk '{print $2}' | tr '\n' ' ' | awk '{print $2": "$1}')
-#	echo $server
-#	echo && echo "#33cc33" # color formatting i3blocks
-#else
-#	IP=$(wget --no-check-certificate -q -O- https://api.ipify.org)
-#	echo $IP
-#	echo && echo "#FF0000" # color formatting for i3blocks
-#fi
+if [ "$(ping -c1 8.8.8.8)" ]; then
+	[[ "$(nmcli c s | grep tun)" ]] && echo "T: `curl ifconfig.me`" || echo `curl ifconfig.me`
+fi
