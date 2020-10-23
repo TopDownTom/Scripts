@@ -1,5 +1,0 @@
-#! /bin/bash
-
-mounted=$(lsblk | grep -v nvme0n1)
-
-echo $mounted

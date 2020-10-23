@@ -1,12 +1,4 @@
 #! /bin/bash
 
-# Gets the volume percentage
-vol=$(pamixer --get-volume)
-muted=$(pamixer --get-mute)
-
 # Echo the volume to the path the polybar module volLevel looks to cat. 
-if [ $muted == "true" ]; then
-	echo "Muted" 
-else
-	echo "$vol%"
-fi
+[[ "`pamixer --get-mute`" == "true" ]] && echo Muted || echo `pamixer --get-volume`%
