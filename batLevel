@@ -1,19 +1,13 @@
 #! /bin/bash
 
-# A simple battery-level script for polybar
+# A simple battery-level script for i3bar
 
-bat_capac=$(cat /sys/class/power_supply/BAT1/capacity)
-discharging=$(cat /sys/class/power_supply/BAT1/status)
-green="%{F#00cc00}"
-yellow="%{F#ffff00}"
+[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && \
+	[[ "$(acpi -b | awk '!/Unknown/{print $4}' | tr -d \%,)" -le "100" ]] && echo suspend && exit 1
 
-if [ $discharging == "Discharging" ] && [ "$bat_capac" -le "10" ]; then
-	systemctl suspend
-
-elif [ $discharging == "Discharging" ]; then
-	echo "$bat_capac%"
-	echo && echo "#e89709"
+if [ "$(ls /sys/class/power_supply)" ]; then
+	echo $batCapac && echo "blank"
+	[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && echo "#ff0000" || echo "#e89709"
 else
-	echo "$bat_capac%"
-	echo && echo "#33cc33"
+	echo
 fi
