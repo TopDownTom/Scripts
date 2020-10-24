@@ -2,11 +2,7 @@
 
 # A simple system temperature module
 
-<<<<<<< HEAD
-temp=$( sensors | grep "Package id 0" | awk '{print $4}' | cut -d'+' -f2-)
-=======
 temp=$( sensors | grep Tdie | awk '{print $2}' | cut -d'+' -f2-)
->>>>>>> master
 tempRaw=${temp%*°C}
 red="#b6465f"
 gold="#e89709"
