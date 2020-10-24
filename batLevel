@@ -6,8 +6,8 @@
 	[[ "$(acpi -b | awk '!/Unknown/{print $4}' | tr -d \%,)" -le "10" ]] && systemctl suspend && exit 1
 
 if [ "$(ls /sys/class/power_supply)" ]; then
-	echo $batCapac && echo "blank"
-	[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && echo "#ff0000" || echo "#e89709"
+	echo `acpi -b | awk '!/Unknown/{print $4}' | tr -d ,` && echo "blank"
+	[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && echo "#ff0000" || echo "#33cc33"
 else
 	echo
 fi
