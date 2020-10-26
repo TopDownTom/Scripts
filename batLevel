@@ -2,8 +2,8 @@
 
 # A simple battery-level script for i3bar
 
-[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && \
-	[[ "$(acpi -b | awk '!/Unknown/{print $4}' | tr -d \%,)" -le "10" ]] && systemctl suspend && exit 1
+#[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && \
+#	[[ "$(acpi -b | awk '!/Unknown/{print $4}' | tr -d \%,)" -le "10" ]] && systemctl suspend && exit 1
 
 if [ "$(ls /sys/class/power_supply)" ]; then
 	echo `acpi -b | awk '!/Unknown/{print $4}' | tr -d ,` && echo "blank"
