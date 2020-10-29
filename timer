@@ -14,7 +14,7 @@ sleep 1s
 done
 
 # When while finishes the time is up and triggers the polybar ipc module
-polybar-msg hook timerNotify 2
+#polybar-msg hook timerNotify 2
 
 # Let me know it's done
 notify-send -u normal -t 3000 "Timer for [ $whatFor ] is up!" 

@@ -13,8 +13,6 @@ read -p "Env name: " ENV
 read -p "Hostname: " HOST
 read -p "Target IP: " IP
 read -p "Ansible Platform: " UNIFIEDPLATFORM
-read -p "Version FROM: " FROM
-read -p "Version TO: " TO
 
 outputPath=~/vmShared/post-docs/$ENV-jira-report.txt
 
@@ -22,11 +20,13 @@ outputPath=~/vmShared/post-docs/$ENV-jira-report.txt
 # sed matches the next instances of the following variables after finding ENV in 00-posting-notes.txt
 sadTag=$(cd $sadPath && git describe)
 sadBranch=$(cd $sadPath && git branch | awk '/\*/{print $2}')
-unifiedApiVersion=$(sed -n "/$ENV/,/Unified API/{p; /Unified API/q}" $postNotes | grep -w 'Unified API')
-unifiedAppsvrVersion=$(sed -n "/$ENV/,/Unified APPSVR/{p; /Unified APPSVR/q}" $postNotes | grep -w 'Unified APPSVR')
-unifiedNgVersion=$(sed -n "/$ENV/,/Unified NG/{p; /Unified NG/q}" $postNotes | grep -w 'Unified NG')
-gdfVersion=$(sed -n "/$ENV/,/GDF/{p; /GDF/q}" $postNotes | grep -w 'GDF')
-snmpVersion=$(sed -n "/$ENV/,/SNMP/{p; /SNMP/q}" $postNotes | grep -w 'SNMP')
+unifiedApiVersion=$(sed -n "/$ENV/,/Unified API/{p; /Unified API/q}" $postNotes | grep -w 'Unified API' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+unifiedAppsvrVersion=$(sed -n "/$ENV/,/Unified APPSVR/{p; /Unified APPSVR/q}" $postNotes | grep -w 'Unified APPSVR' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+unifiedNgVersion=$(sed -n "/$ENV/,/Unified NG/{p; /Unified NG/q}" $postNotes | grep -w 'Unified NG' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+gdfVersion=$(sed -n "/$ENV/,/GDF/{p; /GDF/q}" $postNotes | grep -w 'GDF' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+snmpVersion=$(sed -n "/$ENV/,/SNMP/{p; /SNMP/q}" $postNotes | grep -w 'SNMP' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+FROM=$(sed -n "/$ENV/,/FROM/{p; /FROM/q}" $postNotes | grep -w 'FROM' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+TO=$(sed -n "/$ENV/,/TO/{p; /TO/q}" $postNotes | grep -w TO | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 date=$(date "+%Y%m%d")
 
 # Make the substitutions from the template and output those subs into the post report
@@ -46,7 +46,7 @@ echo "$(sed "s/\$ENV/$ENV/g; \
 	s/\$unifiedNgVersion/$unifiedNgVersion/g; \
 	s/\$date/$date/g; " $postTemplate )" > $outputPath
 
-# Also copy the report to the clipboard to post into Jira. 
+## Also copy the report to the clipboard to post into Jira. 
 echo -e "Template created for this post located at: \n $outputPath"
 cat ~/vmShared/post-docs/$ENV-jira-report.txt | xclip -selection clipboard -i
 echo "Copied report to clipboard.."
