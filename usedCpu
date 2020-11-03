@@ -1,20 +1,8 @@
 #! /bin/bash
-# Work in progress
 
-numCores=$( cat /proc/cpuinfo | grep siblings | head -n 1 | awk '{print $3}' )
-cpuUsage=$( cat /proc/cpuinfo | grep "cpu MHz" | awk '{print $4}' )
-notify-send -t 3000 "$cpuUsage"
-avgUsage=$( echo "$cpuUsage" | head -n 1 )
-av=$( echo "$cpuUsage" | head -n 2 | tail -n 1)
+# A module to calculate average cpu clock speed
+numCores=$(cat /proc/cpuinfo | awk '/siblings/{print $3}' | head -n1)
+cpuUsage=($(cat /proc/cpuinfo | awk '/cpu MHz/{print $4}'))
+IFS='+' avg=$(echo "scale=1;(${cpuUsage[*]})/${#cpuUsage[@]}"|bc)
 
-i=1
-while [ "$i" -le "$numCores" ]; do
-	cpuUsage=$( cat /proc/cpuinfo | grep "cpu MHz" | awk '{print $4}' | head -n 1 )
-	echo $cpuUsage | awk '{print $1}'
-	(( i++ ))
-	sleep .5s
-done
-
-
-#notify-send -t 2000 "$avgUsage     $av"
-#echo $cpuUsage
+echo $avg MHz
