@@ -1,17 +1,7 @@
 #! /bin/bash
 
-# Check connections
-wired="$(cat /sys/class/net/e*/operstate)"
-private=$(ip a | grep `ls /sys/class/net/ | grep -v lo` | grep 'inet ' | awk '{print $2}')
-private=$(ip a | awk '/inet /{print $2}' | grep -v 127.0.0.1)
+# Obtain IP address if online, and indicate if VPN tunnels are up
 
-[ "$wired" == "down" ] && echo "Internet Disconnected"
-
-if [ "$(nmcli c s  | grep tun)" ]; then
-	server=$(protonvpn status | grep -E "IP:|Server:" | awk '{print $2}' | tr '\n' ' ' | awk '{print $2": "$1}')
-	echo "$server"
-else
-	IP=$(curl ifconfig.me)
-	echo -e "$IP | $private"
-	echo && echo "#ff0000"
+if [ "$(ping -c1 8.8.8.8)" ]; then
+	[[ "$(nmcli c s | grep tun)" ]] && echo "T: `curl ifconfig.me`" || echo `curl ifconfig.me`
 fi
