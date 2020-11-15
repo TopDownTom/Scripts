@@ -1,0 +1,6 @@
+#! /bin/bash
+
+# Prints out an alarm query template with the scanning time
+read -p "Enter new scanning time: " newScanTime
+
+sed "s/\$scanTime/$newScanTime/" ~/vmShared/post-docs/alarm-verification.txt
