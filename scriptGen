@@ -11,7 +11,7 @@ if [[ -f $script_file ]]; then
 else
 	echo '#! /bin/bash' > $script_file # Add the she-bang to the first line of the script
 	chmod +x $script_file # make it executable
-	vim $script_file # open it
+	vi $script_file # open it
 	chmod 754 $script_file # make it executable
 	vi $script_file # open it
 fi
