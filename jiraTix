@@ -24,7 +24,8 @@ sadBranch=$(cd $sadPath && git branch --show-current)
 unifiedApiVersion=$(sed -n "/$ENV/,/Unified API/{p; /Unified API/q}" $postNotes | grep -w 'Unified API' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 unifiedAppsvrVersion=$(sed -n "/$ENV/,/Unified APPSVR/{p; /Unified APPSVR/q}" $postNotes | grep -w 'Unified APPSVR' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 unifiedNgVersion=$(sed -n "/$ENV/,/Unified NG/{p; /Unified NG/q}" $postNotes | grep -w 'Unified NG' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
-gdfVersion=$(sed -n "/$ENV/,/GDF/{p; /GDF/q}" $postNotes | grep -w 'GDF' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+gdfCoreVersion=$(sed -n "/$ENV/,/GDF Core/{p; /GDF Core/q}" $postNotes | grep -w 'GDF Core' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
+gdfDevicesVersion=$(sed -n "/$ENV/,/GDF Devices/{p; /GDF Devices/q}" $postNotes | grep -w 'GDF Devices' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 snmpVersion=$(sed -n "/$ENV/,/SNMP/{p; /SNMP/q}" $postNotes | grep -w 'SNMP' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 FROM=$(sed -n "/$ENV/,/FROM/{p; /FROM/q}" $postNotes | grep -w 'FROM' | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
 TO=$(sed -n "/$ENV/,/TO/{p; /TO/q}" $postNotes | grep -w TO | cut -d'[' -f2- | tr -d ' ' | tr -d '\n')
@@ -42,7 +43,8 @@ echo "$(sed "s/\$ENV/$ENV/g; \
 	s|\$sadBranch|$sadBranch|g; \
 	s|\$sadTag|$sadTag|g; \
 	s/\$unifiedApiVersion/$unifiedApiVersion/g; \
-	s/\$gdfVersion/$gdfVersion/g; \
+	s/\$gdfCoreVersion/$gdfCoreVersion/g; \
+	s/\$gdfDevicesVersion/$gdfDevicesVersion/g; \
 	s/\$snmpVersion/$snmpVersion/g; \
 	s/\$unifiedAppsvrVersion/$unifiedAppsvrVersion/g; \
 	s/\$unifiedNgVersion/$unifiedNgVersion/g; \
