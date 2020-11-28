@@ -14,9 +14,10 @@
 # starting directory. 
 
 
-<<<<<<< HEAD
-typeFrom=$( $1 | dmenu -p "Please type filetype FROM:" )
-typeTo=$( $1 | dmenu -p "Please type filetype TO:" )
+#typeFrom=$( $1 | dmenu -p "Please type filetype FROM:" )
+#typeTo=$( $1 | dmenu -p "Please type filetype TO:" )
+typeFrom=rax
+typeTo=mp3
 
 for a in $PWD/*/;
 do dirName="echo $a";
@@ -28,9 +29,9 @@ do dirName="echo $a";
 	for b in *.$typeFrom; # This will process all files within the starting directory
 	do name1=`echo "${b%.*}"`;
 		ffmpeg -y -i "$b" "${name1}.$typeTo";
-#		echo "Processing $name1"
+		echo "Processing $name1"
 	done
-	rm *.$typeFrom
+#	rm *.$typeFrom
 	
 	for c in */; # This jumps into each subdirectory
 	do subDir="echo $c";
@@ -42,18 +43,18 @@ do dirName="echo $a";
 		for d in *.$typeFrom; # This formats files within the subdirectories
 		do name2=`echo "${d%.*}"`;
 			ffmpeg -y -i "$d" "${name2}.$typeTo";
-#			echo "Processing $name2"
+			echo "Processing $name2"
 		done
-		rm *.$typeFrom
+#		rm *.$typeFrom
 	cd ..
 	done
-	rm *.$typeFrom
+#	rm *.$typeFrom
 done
 
+notify-send -u critical "done removing"
 # Beep twice when task is complete. 
-( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
-( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
-=======
+#( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
+#( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
 #typeFrom=$( $1 | dmenu -p "Please type filetype FROM:" )
 #typeTo=$( $1 | dmenu -p "Please type filetype TO:" )
 #
@@ -91,4 +92,3 @@ done
 ## Beep twice when task is complete. 
 #( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
 #( speaker-test -t sine -f 500 )& pid=$! ; sleep 0.2s ; kill -9 $pid
->>>>>>> master
