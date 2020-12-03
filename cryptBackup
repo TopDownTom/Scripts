@@ -1,0 +1,26 @@
+#! /bin/bash
+
+syncFiles () {
+	echo -e "\n\nSyncing over the following:"
+	rsync -av $HOME/docs/test-dir $mountPoint
+	exit
+}
+
+
+mountPoint=($(lsblk | awk '/veracrypt/{print $7}'))
+[[ ${#mountPoint[@]} -gt 1 ]] && \
+	lsblk | awk '!/nvme/{print $1" "$4" "$7}' && \
+	echo -e "\nPlease select the appropriate mountpoint based on the above info:" && \
+	select mountPoint in "${mountPoint[@]}" Exit;
+	do
+		case $mountPoint in
+			Exit)
+				echo -e "\n...Exiting, nothing done...\n\n"
+				stop=1 && break;;
+			*)
+				stop=0 && break;;
+		esac
+	done || stop=0
+
+[ $stop -eq 1 ] && exit
+[ -v mountPoint ] && syncFiles
