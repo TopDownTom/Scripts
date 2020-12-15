@@ -1,6 +1,67 @@
 #! /bin/bash
 
-# Prints out an alarm query template with the scanning time
-read -p "Enter new scanning time: " newScanTime
+echo
+echo "Select count(*) as alarm_counts from css_networking_device_alarm a
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1'
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+into @raised;
+Select count(*) as alarm_counts from css_networking_device_alarm a
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1' and cleared is not null
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+into @cleared;
+Select concat('Raised:   ', @raised) as 'Alarm Counts'
+union
+Select concat('Cleared:  ', @cleared)
+union
+Select concat('Active:   ', sum(@raised-@cleared));" | xclip -selection clipboard -i && echo -e "Copied count() query to clipboard\n" && read -p "Press enter to get first scrub sheet tab alarm query"
 
-sed "s/\$scanTime/$newScanTime/" ~/vmShared/post-docs/alarm-verification.txt
+echo "-- First scrub sheet tab
+Select dt.vendor, dt.model, a.description, s.description as severity, count(DISTINCT Node_Main_Id ( nt.id )) AS devices_raised, count(*) as count_raised from css_networking_device_alarm a
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1'
+inner join css_networking_device_type dt on dt.id = d.type_id
+left join css_networking_alarm_severity s on s.id = a.severity_id
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+group by dt.vendor, dt.model, a.description, s.description
+order by dt.vendor, dt.model, a.description, s.description;" | xclip -selection clipboard -i && echo -e "Copied First Scrub Sheet to clipboard\n" && read -p "Press enter to get second scrub sheet tab alarm query"
+
+echo "-- Second scrub sheet tab
+Select Node_Main_Device_Ip(nt.id) as IP, dt.vendor, dt.model, a.description, s.description as severity, count(*) as count_raised from css_networking_device_alarm a
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1'
+inner join css_networking_device_type dt on dt.id = d.type_id
+left join css_networking_alarm_severity s on s.id = a.severity_id
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+group by dt.vendor, dt.model, a.description, s.description, Node_Main_Id(nt.id)
+order by dt.vendor, dt.model, a.description, s.description, Node_Main_Id(nt.id);" | xclip -selection clipboard -i && echo -e "Copied Second Scrub Sheet to clipboard\n" && read -p "Press enter to get third scrub sheet alarm query"
+
+echo "-- Third scrub sheet tab
+select
+Node_Main_Device_Ip(nt.id),
+a.description,
+a.raised,
+a.cleared,
+ntm.breadcrumb
+from css_networking_device_alarm a 
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1'
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+group by Node_Main_Id(nt.id), a.description
+order by a.description asc;" | xclip -selection clipboard -i && echo -e "Copied Third Scrub Sheet to clipboard\n" && read -p "Press enter to get breadcumbs alarm query"
+
+echo "Select Node_Main_Device_Ip(nt.id) as IP, dt.vendor, dt.model, a.description, s.description as severity, count(*) as count_raised, d.id, ntm.breadcrumb from css_networking_device_alarm a
+inner join css_networking_device d on d.id = a.device_id and a.raised > '$1'
+inner join css_networking_device_type dt on dt.id = d.type_id
+left join css_networking_alarm_severity s on s.id = a.severity_id
+inner join css_networking_network_tree nt on nt.device_id = d.id
+inner join css_networking_network_tree_map ntm on ntm.node_id = nt.id and ntm.deleted = 0
+group by dt.vendor, dt.model, a.description, s.description, Node_Main_Id(nt.id)
+order by dt.vendor, dt.model, a.description, s.description, Node_Main_Id(nt.id);" | xclip -selection clipboard -i && echo -e "Copied Breadcrumbs Scrub Sheet to clipboard\n" && read -p "Press enter to get final alarm query"
+
+echo "SELECT * FROM 'css_networking_device_alarm'
+WHERE 'device_id' = '1234567'
+AND 'description' LIKE '%blah%'
+order by raised DESC
+limit 100;" | xclip -selection clipboard -i && echo "Copied the toggle-catcher-query to  the clipboard. All scrub queries given.."
