@@ -9,3 +9,6 @@ if [ "$(ls /sys/class/power_supply)" ]; then
 else
 	echo
 fi
+
+# Alert if the total of all battery capacities is less than the set lower limit
+[[ $(echo "$(cat /sys/class/power_supply/BAT*/capacity | sed 's/$/+/' | tr -d '\n' | sed 's/.$//')" | bc) -le 10 ]] && notify-send -u critical "Batteries below 10%!"
