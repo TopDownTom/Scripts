@@ -3,12 +3,12 @@
 # A simple battery-level script for i3bar
 # If there is no battery (i.e. desktop) nothing is output
 
-if [ "$(ls /sys/class/power_supply)" ]; then
+if [ "$(ls /sys/class/power_supply/)" ]; then
 	echo `acpi -b | awk '!/Unknown/{print $2$4}' | tr -d ,` && echo "blank"
 	[[ $(acpi -b | awk '!/Unknown/{print $3}') == "Discharging," ]] && echo "#ff0000" || echo "#33cc33"
 else
 	echo
+	# Alert if the total of all battery capacities is less than the set lower limit
+	[[ $(ls /sys/class/power_suppy/BAT*) ]] && [[ $(echo "$(cat /sys/class/power_supply/BAT*/capacity | sed 's/$/+/' | tr -d '\n' | sed 's/.$//')" | bc) -le 10 ]] && notify-send -u critical "Batteries below 10%!"
 fi
 
-# Alert if the total of all battery capacities is less than the set lower limit
-[[ $(echo "$(cat /sys/class/power_supply/BAT*/capacity | sed 's/$/+/' | tr -d '\n' | sed 's/.$//')" | bc) -le 10 ]] && notify-send -u critical "Batteries below 10%!"
