@@ -2,6 +2,7 @@
 
 # A simple battery-level script for i3bar
 # If there is no battery (i.e. desktop) nothing is output
+# This script assumes at least one battery in your laptop will be BAT0
 
 if [ -d "/sys/class/power_supply/BAT0" ]; then
 	echo `acpi -b | awk '!/Unknown/{print $2$4}' | tr -d ,` && echo "blank"
