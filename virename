@@ -37,7 +37,7 @@ touch "$COMMANDS"
 chmod 700 "$COMMANDS"	# For security, so noone can make us execute arbitrary commands
 
 # Create a list of filenames
-\ls > "$ORIG_NAMES"
+\ls -A > "$ORIG_NAMES"
 
 cp "$ORIG_NAMES" "$NEW_NAMES"
 
