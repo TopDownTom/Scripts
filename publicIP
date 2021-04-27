@@ -3,8 +3,8 @@
 # Obtain IP address if online, and indicate if VPN tunnels are up
 
 # Exit this script if the site is unreachable, which happens periodically
-curl -s ifconfig.me | grep Error: && echo "ifconfig.me error" || \
+curl -s ifconfig.me | grep -i Error: && echo "ifconfig.me error" || \
 
-if [ "$(ping -c1 8.8.8.8)" ]; then
-	[[ "$(nmcli c s | grep tun)" ]] && echo "T: `curl ifconfig.me`" || echo `curl ifconfig.me`
+if [ "$(ping -4 -c1 8.8.8.8)" ]; then
+	[[ "$(nmcli c s | grep tun)" ]] && echo "T: `protonvpn status | awk '/IP/{print $2}'`" || echo `curl ifconfig.me`
 fi
