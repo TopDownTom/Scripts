@@ -1,6 +1,5 @@
 #!/bin/bash
 # This script is called in a Vim function to compile the current document. See vimrc.
-# It depends on a program called pydflatex which can be found at: https://github.com/olivierverdier/pydflatex
 
 file=${1%.*}
 
@@ -18,10 +17,10 @@ function moveLogs {
 #Check if a pdf of the file is already open. Zathura supports live-refreshing.
 if ps -aux | grep -v grep | grep "$PDFVIEWER $PWD/build/$file.pdf"
 then
-	pydflatex $file.tex
+	pdflatex $file.tex
 	moveLogs
 else
-	pydflatex $file.tex
+	pdflatex $file.tex
 	moveLogs
 	zathura $PWD/build/$file.pdf &
 fi
