@@ -2,15 +2,13 @@
 
 
 # ffmpeg screen recorder
-cd $HOME/videos
 res=$( xrandr -q --current | grep '*' | awk '{print $1}' | head -n 1 )
 date=$( date +%Y-%m-%e-%I-%M )
-echo $res $date
 if ! ( ls | grep screenCasts > /dev/null )
 then
 	mkdir screenCasts
 fi
-outputDir="$HOME/videos/screenCasts"
+outputDir="$PWD/screenCasts"
 name=$( $1 | dmenu -p "Video Title?" )
 
 read -p "What format? (video/audio/both) " recordingFormat
