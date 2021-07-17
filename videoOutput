@@ -3,10 +3,10 @@
 # This script utilizes xrandr to select the desired video output configuration and switches audio output accordingly
 
 read -p "Single or Multi display? " singleOrMultiMonitor
-connectedDevices=($( xrandr --query | grep -w "connected" | awk '{print $1}' ))
-laptopScreen=$( xrandr --query | grep -w "primary" | awk '{print $1}') 
-externalScreen=$( xrandr -q | grep -v "primary" | grep -w "connected" | awk '{print $1}' )
-resolution="1920x1080"
+sleep .1
+connectedDevices=($( xrandr --query | awk '/ connected /{print $1}' ))
+laptopScreen=$(xrandr --query | awk '/ primary /{print $1}')
+externalScreen=$(xrandr --query | grep -v " primary " | awk '/ connected /{print $1}')
 
 if [ $singleOrMultiMonitor == "s" ]
 then
@@ -20,8 +20,8 @@ then
 				;;
 			*)
 				echo "using $whichScreen"
-				discardedScreen=$( xrandr --query | grep -w "connected" | grep -v "$whichScreen" | awk '{print $1}' )
-				xrandr --output $whichScreen --mode $resolution 
+				discardedScreen=$(echo ${connectedDevices[@]/$whichScreen})
+				xrandr --output $whichScreen --auto
 				xrandr --output $discardedScreen --off
 				if [ $whichScreen == "$laptopScreen" ]
 				then
@@ -29,7 +29,7 @@ then
 				else
 					pacmd set-card-profile 0 output:hdmi-stereo-extra1
 				fi
-				notify-send -u normal "Moving display to $whichScreen"
+				notify-send -u normal -t 2000 "Moving display to $whichScreen"
 				break
 				;;
 		esac
@@ -37,6 +37,7 @@ then
 
 elif [ $singleOrMultiMonitor == "m" ]
 then
+	echo "Where do you want the laptop screen relative to the external screen?"
 	possibleRelPositions=( left-of right-of above below same-as )
 	select laptopScreenRelPosition in "${possibleRelPositions[@]}" Exit;
 		do
@@ -48,8 +49,8 @@ then
 				*)
 					echo "Setting laptop screen $laptopScreenRelPosition external monitor"
 					notify-send -u normal "Moving $laptopScreen $laptopScreenRelPosition external monitor"
-					xrandr --output HDMI2 --mode $resolution 
-					xrandr --output $laptopScreen --mode $resolution 
+					xrandr --output HDMI2 --auto
+					xrandr --output $laptopScreen --auto
 					xrandr --output $laptopScreen --$laptopScreenRelPosition HDMI2
 					chooseAudio
 					break
